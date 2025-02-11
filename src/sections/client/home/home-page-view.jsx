@@ -37,7 +37,7 @@ export default function HomePageView() {
             description="Commencez à déposer vos dossiers dès maintenant, vous pouvez choisir entre "
             img={<SeoIllustration hideBackground />}
             action={
-              <Stack spacing={2} flexDirection="row">
+              <Stack spacing={2} flexDirection={{ sx: "column", md: "row"}}>
                 <Button variant="contained" color="primary" LinkComponent={RouterLink} href={paths.dashboard.demande}>
                   Demande d&apos;autorisation
                   <Iconify icon="solar:arrow-right-broken" />
