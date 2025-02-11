@@ -16,6 +16,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { paths } from 'src/routes/paths';
 import Grid from '@mui/material/Unstable_Grid2';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import React, { useCallback, useState } from 'react';
@@ -25,7 +26,6 @@ import { Label } from 'src/components/label';
 import { MultiFilePreview, SingleFilePreview, Upload, UploadBox } from 'src/components/upload';
 import { useBoolean } from 'src/hooks/use-boolean';
 import { DashboardContent } from 'src/layouts/dashboard';
-import { paths } from 'src/routes/paths';
 
 export default function DepotDetailsView({ id }) {
   const [files, setFiles] = useState([]);

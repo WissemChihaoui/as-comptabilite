@@ -3,6 +3,7 @@ import React from 'react'
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs'
 import { Iconify } from 'src/components/iconify'
 import { DEMANDE_AUTORISATION_FOLDERS } from 'src/_mock/_categories'
+import { paths } from 'src/routes/paths'
 import { DashboardContent } from 'src/layouts/dashboard'
 import { FileManagerView } from '../../file-manager/view'
 import FilesView from '../../single-files/view/files-view'
@@ -16,7 +17,7 @@ export default function DemandePageView() {
           links={[
             {
               name: 'Accueil',
-              href: '#',
+              href: paths.dashboard.root,
               icon: <Iconify icon="solar:home-angle-2-bold-duotone" />,
             },
             {

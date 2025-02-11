@@ -1,5 +1,6 @@
 import React from 'react'
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs'
+import { paths } from 'src/routes/paths'
 import { SARL_DOC } from 'src/_mock/_categories'
 import { Iconify } from 'src/components/iconify'
 import { DashboardContent } from 'src/layouts/dashboard'
@@ -14,7 +15,7 @@ export default function SarlPageView() {
           links={[
             {
               name: 'Accueil',
-              href: '#',
+              href: paths.dashboard.root,
               icon: <Iconify icon="solar:home-angle-2-bold-duotone" />,
             },
             {

@@ -1,4 +1,5 @@
 import React from 'react';
+import { paths } from 'src/routes/paths';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { Iconify } from 'src/components/iconify';
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -12,7 +13,7 @@ export default function DepotPageView() {
           links={[
             {
               name: 'Accueil',
-              href: '#',
+              href: paths.dashboard.root,
               icon: <Iconify icon="solar:home-angle-2-bold-duotone" />,
             },
             {
