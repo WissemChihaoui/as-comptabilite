@@ -135,9 +135,9 @@ export function DashboardLayout({ sx, children, header, data }) {
             rightArea: (
               <Box display="flex" alignItems="center" gap={{ xs: 0, sm: 0.75 }}>
                 {/* -- Searchbar -- */}
-                <Searchbar data={navData} />
+                {/* <Searchbar data={navData} /> */}
                 {/* -- Language popover -- */}
-                <LanguagePopover
+                {/* <LanguagePopover
                   data={[
                     { value: 'en', label: 'English', countryCode: 'GB' },
                     { value: 'fr', label: 'French', countryCode: 'FR' },
@@ -145,11 +145,9 @@ export function DashboardLayout({ sx, children, header, data }) {
                     { value: 'cn', label: 'Chinese', countryCode: 'CN' },
                     { value: 'ar', label: 'Arabic', countryCode: 'SA' },
                   ]}
-                />
+                /> */}
                 {/* -- Notifications popover -- */}
                 <NotificationsDrawer data={_notifications} />
-                {/* -- Contacts popover -- */}
-                <ContactsPopover data={_contacts} />
                 {/* -- Settings button -- */}
                 <SettingsButton />
                 {/* -- Account drawer -- */}

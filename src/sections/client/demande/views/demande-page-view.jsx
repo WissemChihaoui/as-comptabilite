@@ -5,8 +5,7 @@ import { Iconify } from 'src/components/iconify'
 import { DEMANDE_AUTORISATION_FOLDERS } from 'src/_mock/_categories'
 import { paths } from 'src/routes/paths'
 import { DashboardContent } from 'src/layouts/dashboard'
-import { FileManagerView } from '../../file-manager/view'
-import FilesView from '../../single-files/view/files-view'
+import { FileManagerView } from '../../single-files/view'
 
 export default function DemandePageView() {
   return (
@@ -27,9 +26,7 @@ export default function DemandePageView() {
           ]}
           sx={{ mb: { xs: 3, md: 5 } }}
         />
-        <FileManagerView folders={DEMANDE_AUTORISATION_FOLDERS}/>
-
-        {/* <FilesView /> */}
+        <FileManagerView files={DEMANDE_AUTORISATION_FOLDERS}/>
       </DashboardContent>
     </>
   )

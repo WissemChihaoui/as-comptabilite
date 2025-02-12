@@ -1,3 +1,4 @@
+import { today } from 'src/utils/format-time';
 import { _mock } from './_mock';
 
 const DEMANDE_AUTORISATION_FOLDERS_NAMES = [
@@ -14,17 +15,17 @@ const DEMANDE_AUTORISATION_FOLDERS_NAMES = [
 ];
 
 const SARL_DOC_NAMES = [
-  "Piece d'identité des associés",
-  'ACTE DE CONSTITUTION - PRENDRE RENDEZ-VOUS NOTAIRE',
-  'Contrat de bail signé',
-  "Déclaration sur l'honneur",
+  "Piece d'identité des associés.pdf",
+  'ACTE DE CONSTITUTION - PRENDRE RENDEZ-VOUS NOTAIRE.pdf',
+  'Contrat de bail signé.pdf',
+  "Déclaration sur l'honneur.pdf",
 ];
 const SARLS_DOC_NAMES = [
-  "Piece d'identité des associés",
-  'RIB société',
-  'Contrat de bail signé',
-  'Statuts (acte sous seing privé)',
-  'Preuve de dépots des statuts au LBR',
+  "Piece d'identité des associés.pdf",
+  'RIB société.pdf',
+  'Contrat de bail signé.pdf',
+  'Statuts (acte sous seing privé).pdf',
+  'Preuve de dépots des statuts au LBR.pdf',
 ];
 
 const DECLARATION_IMPOT_NAMES = [
@@ -45,6 +46,7 @@ export const DEMANDE_AUTORISATION_FOLDERS = DEMANDE_AUTORISATION_FOLDERS_NAMES.m
     id: `${_mock.id(index)}_folder`,
     type: `${name.split('.').pop()}`,
     name,
+    createdAt: today(),
     description:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit amet sequi delectus dolores animi rem maxime perferendis, repellat, ut quia nam obcaecati suscipit optio consequuntur sapiente, in dolorem ipsam iusto.',
   })
@@ -54,6 +56,7 @@ export const SARL_DOC = SARL_DOC_NAMES.map((name, index) => ({
   id: `${_mock.id(index)}_folder`,
   type: `${name.split('.').pop()}`,
   name,
+  createdAt: today(),
   description:
     'Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit amet sequi delectus dolores animi rem maxime perferendis, repellat, ut quia nam obcaecati suscipit optio consequuntur sapiente, in dolorem ipsam iusto.',
 }));
@@ -62,6 +65,7 @@ export const SARLS_DOC = SARLS_DOC_NAMES.map((name, index) => ({
   id: `${_mock.id(index)}_folder`,
   type: `${name.split('.').pop()}`,
   name,
+  createdAt: today(),
   description:
     'Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit amet sequi delectus dolores animi rem maxime perferendis, repellat, ut quia nam obcaecati suscipit optio consequuntur sapiente, in dolorem ipsam iusto.',
 }));
@@ -69,6 +73,7 @@ export const SARLS_DOC = SARLS_DOC_NAMES.map((name, index) => ({
 export const DECLARATION_IMPOT = DECLARATION_IMPOT_NAMES.map((name, index) => ({
   id: `${_mock.id(index)}_folder`,
   type: `folder`,
+  createdAt: today(),
   name,
   description:
     'Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit amet sequi delectus dolores animi rem maxime perferendis, repellat, ut quia nam obcaecati suscipit optio consequuntur sapiente, in dolorem ipsam iusto.',
