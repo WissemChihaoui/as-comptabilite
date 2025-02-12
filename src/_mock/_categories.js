@@ -2,30 +2,30 @@ import { today } from 'src/utils/format-time';
 import { _mock } from './_mock';
 
 const DEMANDE_AUTORISATION_FOLDERS_NAMES = [
-  "Pièce d'identité du demandeur.pdf",
-  'Copie du contrail de bail.pdf',
-  'Extrait de casier judiciaire francais.pdf',
-  'Extrait de casier judiciaire luxembourgeois.pdf',
-  'Déclaration de non-faillite - Sur rendez-vous notaire.pdf',
-  'Projet de statut.pdf',
-  'Copie des diplomes.pdf',
-  'RIB de la société.pdf',
-  'Formulaire rempli.pdf',
-  'Timbre de chancellerie 50,00€.pdf',
+  "Pièce d'identité du demandeur",
+  'Copie du contrail de bail',
+  'Extrait de casier judiciaire francais',
+  'Extrait de casier judiciaire luxembourgeois',
+  'Déclaration de non-faillite - Sur rendez-vous notaire',
+  'Projet de statut',
+  'Copie des diplomes',
+  'RIB de la société',
+  'Formulaire rempli',
+  'Timbre de chancellerie 50,00€',
 ];
 
 const SARL_DOC_NAMES = [
-  "Piece d'identité des associés.pdf",
-  'ACTE DE CONSTITUTION - PRENDRE RENDEZ-VOUS NOTAIRE.pdf',
-  'Contrat de bail signé.pdf',
-  "Déclaration sur l'honneur.pdf",
+  "Piece d'identité des associés",
+  'ACTE DE CONSTITUTION - PRENDRE RENDEZ-VOUS NOTAIRE',
+  'Contrat de bail signé',
+  "Déclaration sur l'honneur",
 ];
 const SARLS_DOC_NAMES = [
-  "Piece d'identité des associés.pdf",
-  'RIB société.pdf',
-  'Contrat de bail signé.pdf',
-  'Statuts (acte sous seing privé).pdf',
-  'Preuve de dépots des statuts au LBR.pdf',
+  "Piece d'identité des associés",
+  'RIB société',
+  'Contrat de bail signé',
+  'Statuts (acte sous seing privé)',
+  'Preuve de dépots des statuts au LBR',
 ];
 
 const DECLARATION_IMPOT_NAMES = [

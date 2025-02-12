@@ -94,7 +94,7 @@ export function FileManagerView({ folders }) {
 
   return (
     <>
-      <Stack spacing={2.5} sx={{ my: { xs: 3, md: 5 } }}>
+      <Stack spacing={2.5} >
         {canReset && renderResults}
       </Stack>
       <Typography mb={2} variant="h6">Information générale</Typography>
@@ -117,7 +117,7 @@ export function FileManagerView({ folders }) {
       <Stack py={2} alignItems="flex-end">
         <Button variant='contained' color='primary'>Valider</Button>
       </Stack>
-      <Divider sx={{ my: 5, borderStyle: 'dashed' }} />
+      <Divider sx={{ my: 1, borderStyle: 'dashed' }} />
       <Typography mb={2} variant="h6">Documents à fournir</Typography>
       {notFound ? (
         <EmptyContent filled sx={{ py: 10 }} />
