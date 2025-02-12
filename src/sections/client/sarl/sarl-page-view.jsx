@@ -4,6 +4,7 @@ import { paths } from 'src/routes/paths';
 import { SARL_DOC } from 'src/_mock/_categories';
 import { Iconify } from 'src/components/iconify';
 import { DashboardContent } from 'src/layouts/dashboard';
+import { Label } from 'src/components/label';
 import { FileManagerView } from '../single-files/view';
 
 export default function SarlPageView() {
@@ -24,6 +25,9 @@ export default function SarlPageView() {
             },
           ]}
           sx={{ mb: { xs: 3, md: 5 } }}
+          action={
+                      <Label color="info">En cours</Label>
+                    }
         />
         <FileManagerView files={SARL_DOC} />
       </DashboardContent>

@@ -10,7 +10,7 @@ export const defaultSettings = {
   contrast: 'hight',
   navLayout: 'horizontal',
   primaryColor: 'blue',
-  navColor: 'apparent',
+  navColor: 'integrate',
   compactLayout: true,
   fontFamily: defaultFont,
 };

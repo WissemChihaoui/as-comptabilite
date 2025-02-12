@@ -93,6 +93,17 @@ export function DashboardLayout({ sx, children, header, data }) {
                 cssVars={navColorVars.section}
               />
             ) : null,
+            centerArea: (
+              <Logo
+                  isSingle={false}
+                    sx={{
+                      display: 'none',
+                      [theme.breakpoints.up(layoutQuery)]: {
+                        display: 'inline-flex',
+                      },
+                    }}
+                  />
+            ),
             leftArea: (
               <>
                 {/* -- Nav mobile -- */}
@@ -111,16 +122,9 @@ export function DashboardLayout({ sx, children, header, data }) {
                   cssVars={navColorVars.section}
                 />
                 {/* -- Logo -- */}
-                {isNavHorizontal && (
-                  <Logo
-                    sx={{
-                      display: 'none',
-                      [theme.breakpoints.up(layoutQuery)]: {
-                        display: 'inline-flex',
-                      },
-                    }}
-                  />
-                )}
+                {/* {isNavHorizontal && (
+                  
+                )} */}
                 {/* -- Divider -- */}
                 {isNavHorizontal && (
                   <StyledDivider

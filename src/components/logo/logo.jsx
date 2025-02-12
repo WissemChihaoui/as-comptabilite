@@ -176,10 +176,10 @@ export const Logo = forwardRef(
     // );
 
     const baseSize = {
-      width: width ?? 40,
+     
       height: height ?? 40,
       ...(!isSingle && {
-        width: width ?? 102,
+        
         height: height ?? 36,
       }),
     };

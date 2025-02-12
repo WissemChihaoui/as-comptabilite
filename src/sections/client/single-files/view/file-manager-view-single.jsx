@@ -6,6 +6,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import { useSetState } from 'src/hooks/use-set-state';
 
 import { fIsAfter, fIsBetween } from 'src/utils/format-time';
+import { Stack } from '@mui/material';
 
 import { toast } from 'src/components/snackbar';
 import { fileFormat } from 'src/components/file-thumbnail';
@@ -113,7 +114,9 @@ export function FileManagerView({ files }) {
       )}
 
       <FileManagerNewFolderDialog open={upload.value} onClose={upload.onFalse} />
-
+      <Stack my={2} alignItems="flex-start">
+        <Button variant='contained' color='primary'>Envoyer ma demande</Button>
+      </Stack>
       <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}
