@@ -52,7 +52,7 @@ export function AuthSplitLayout({ sx, section, children, header }) {
                   color="inherit"
                   sx={{ typography: 'subtitle2' }}
                 >
-                  Need help?
+                  Besoin d&apos;aide ?
                 </Link>
                 {/* -- Settings button -- */}
                 <SettingsButton />

@@ -87,22 +87,22 @@ export function DashboardLayout({ sx, children, header, data }) {
               </Alert>
             ),
             bottomArea: isNavHorizontal ? (
-              <NavHorizontal
-                data={navData}
-                layoutQuery={layoutQuery}
-                cssVars={navColorVars.section}
-              />
-            ) : null,
-            centerArea: (
               <Logo
                   isSingle={false}
                     sx={{
                       display: 'none',
                       [theme.breakpoints.up(layoutQuery)]: {
                         display: 'inline-flex',
+                        width: '260px',
+                        height: '60px',
+                        marginLeft: 'auto',
+                        marginRight: 'auto'
                       },
                     }}
                   />
+            ) : null,
+            centerArea: (
+              <></>
             ),
             leftArea: (
               <>

@@ -18,7 +18,7 @@ export function Section({
   methods,
   title = 'Manage the job',
   imgUrl = `${CONFIG.assetsDir}/assets/illustrations/illustration-dashboard.webp`,
-  subtitle = 'More effectively with optimized workflows.',
+  subtitle = 'Plus efficacement grâce à des flux de travail optimisés.',
   ...other
 }) {
   const theme = useTheme();
