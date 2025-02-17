@@ -8,6 +8,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { CONFIG } from 'src/config-global';
 import { varAlpha, bgGradient } from 'src/theme/styles';
+import { Logo } from 'src/components/logo';
 
 // ----------------------------------------------------------------------
 
@@ -18,7 +19,7 @@ export function Section({
   methods,
   title = 'Manage the job',
   imgUrl = `${CONFIG.assetsDir}/assets/illustrations/illustration-dashboard.webp`,
-  subtitle = 'Plus efficacement grâce à des flux de travail optimisés.',
+  subtitle = 'Bienvenue sur votre espace de dépots de documents de ASCOMPTABILITE',
   ...other
 }) {
   const theme = useTheme();
@@ -52,9 +53,12 @@ export function Section({
       {...other}
     >
       <div>
-        <Typography variant="h3" sx={{ textAlign: 'center' }}>
+        {/* <Typography variant="h3" sx={{ textAlign: 'center' }}>
           {title}
-        </Typography>
+        </Typography> */}
+        <Box display="flex" justifyContent="center">
+          <Logo isSingle={false} height={70}/>
+        </Box>
 
         {subtitle && (
           <Typography sx={{ color: 'text.secondary', textAlign: 'center', mt: 2 }}>
@@ -70,43 +74,6 @@ export function Section({
         sx={{ width: 1, aspectRatio: '4/3', objectFit: 'cover' }}
       />
 
-      {!!methods?.length && method && (
-        <Box component="ul" gap={2} display="flex">
-          {methods.map((option) => {
-            const selected = method === option.label.toLowerCase();
-
-            return (
-              <Box
-                key={option.label}
-                component="li"
-                sx={{
-                  ...(!selected && {
-                    cursor: 'not-allowed',
-                    filter: 'grayscale(1)',
-                  }),
-                }}
-              >
-                <Tooltip title={option.label} placement="top">
-                  <Link
-                    component={RouterLink}
-                    href={option.path}
-                    sx={{
-                      ...(!selected && { pointerEvents: 'none' }),
-                    }}
-                  >
-                    <Box
-                      component="img"
-                      alt={option.label}
-                      src={option.icon}
-                      sx={{ width: 32, height: 32 }}
-                    />
-                  </Link>
-                </Tooltip>
-              </Box>
-            );
-          })}
-        </Box>
-      )}
     </Box>
   );
 }

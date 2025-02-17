@@ -87,15 +87,15 @@ export function JwtSignUpView() {
   const renderForm = (
     <Box gap={3} display="flex" flexDirection="column">
       <Box display="flex" gap={{ xs: 3, sm: 2 }} flexDirection={{ xs: 'column', sm: 'row' }}>
-        <Field.Text name="firstName" label="First name" InputLabelProps={{ shrink: true }} />
-        <Field.Text name="lastName" label="Last name" InputLabelProps={{ shrink: true }} />
+        <Field.Text name="firstName" label="Nom" InputLabelProps={{ shrink: true }} />
+        <Field.Text name="lastName" label="Prénom" InputLabelProps={{ shrink: true }} />
       </Box>
 
-      <Field.Text name="email" label="Email address" InputLabelProps={{ shrink: true }} />
+      <Field.Text name="email" label="Email" InputLabelProps={{ shrink: true }} />
 
       <Field.Text
         name="password"
-        label="Password"
+        label="Mot de passe"
         placeholder="6+ characters"
         type={password.value ? 'text' : 'password'}
         InputLabelProps={{ shrink: true }}
@@ -117,9 +117,9 @@ export function JwtSignUpView() {
         type="submit"
         variant="contained"
         loading={isSubmitting}
-        loadingIndicator="Create account..."
+        loadingIndicator="Créer un compte..."
       >
-        Create account
+        Créer un compte
       </LoadingButton>
     </Box>
   );
@@ -127,12 +127,12 @@ export function JwtSignUpView() {
   return (
     <>
       <FormHead
-        title="Get started absolutely free"
+        title="Créer votre compte avec AS-Comptabilité"
         description={
           <>
-            {`Already have an account? `}
+            {`Vous avez déjà un compte ? `}
             <Link component={RouterLink} href={paths.auth.jwt.signIn} variant="subtitle2">
-              Get started
+              Connecter vous
             </Link>
           </>
         }

@@ -40,20 +40,12 @@ export function AuthSplitLayout({ sx, section, children, header }) {
             leftArea: (
               <>
                 {/* -- Logo -- */}
-                <Logo />
+                {/* <Logo /> */}
               </>
             ),
             rightArea: (
               <Box display="flex" alignItems="center" gap={{ xs: 1, sm: 1.5 }}>
-                {/* -- Help link -- */}
-                <Link
-                  href={paths.faqs}
-                  component={RouterLink}
-                  color="inherit"
-                  sx={{ typography: 'subtitle2' }}
-                >
-                  Besoin d&apos;aide ?
-                </Link>
+               
                 {/* -- Settings button -- */}
                 <SettingsButton />
               </Box>
