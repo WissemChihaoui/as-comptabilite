@@ -136,11 +136,11 @@ export function JwtSignInView() {
         sx={{ textAlign: { xs: 'center', md: 'left' } }}
       />
 
-      <Alert severity="info" sx={{ mb: 3 }}>
-      Utiliser <strong>{defaultValues.email}</strong>
-        {' avec mot de passe '}
-        <strong>{defaultValues.password}</strong>
-      </Alert>
+        {/* <Alert severity="info" sx={{ mb: 3 }}>
+        Utiliser <strong>{defaultValues.email}</strong>
+          {' avec mot de passe '}
+          <strong>{defaultValues.password}</strong>
+        </Alert> */}
 
       {!!errorMsg && (
         <Alert severity="error" sx={{ mb: 3 }}>
