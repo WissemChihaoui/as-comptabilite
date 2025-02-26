@@ -10,13 +10,11 @@ const DEMANDE_AUTORISATION_FOLDERS_NAMES = [
   'Projet de statut',
   'Copie des diplomes',
   'RIB de la société',
-  'Formulaire rempli',
-  'Timbre de chancellerie 50,00€',
 ];
 
 const SARL_DOC_NAMES = [
   "Piece d'identité des associés",
-  'ACTE DE CONSTITUTION - PRENDRE RENDEZ-VOUS NOTAIRE',
+  'ACTE DE CONSTITUTION',
   'Contrat de bail signé',
   "Déclaration sur l'honneur",
 ];
