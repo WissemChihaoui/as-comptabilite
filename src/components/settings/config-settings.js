@@ -9,7 +9,7 @@ export const defaultSettings = {
   direction: 'ltr',
   contrast: 'hight',
   navLayout: 'horizontal',
-  primaryColor: 'blue',
+  primaryColor: 'red',
   navColor: 'integrate',
   compactLayout: true,
   fontFamily: defaultFont,
