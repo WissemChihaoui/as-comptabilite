@@ -30,16 +30,23 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { usePutRecords } from 'src/actions/user';
 import Grid from '@mui/material/Unstable_Grid2';
+import { useMockedUser } from 'src/auth/hooks';
 
-import { FileManagerTable } from '../file-manager-table';
-import { FileManagerFilters } from '../file-manager-filters';
 import { FileManagerFiltersResult } from '../file-manager-filters-result';
 import { FileManagerGridView } from '../file-manager-grid-view';
 
 // ----------------------------------------------------------------------
 
 export function FileManagerView({ folders }) {
+  const { user } = useMockedUser();
+  const { updateRecords } = usePutRecords();
+  
+    const [demenagement, setDemenagement] = useState(user.demenagement);
+    const [adresse, setAdresse] = useState(user.adresse)
+    const [situation, setSituation] = useState(user.situation)
+
   const table = useTable({ defaultRowsPerPage: 10 });
 
   const confirm = useBoolean();
@@ -92,6 +99,17 @@ export function FileManagerView({ folders }) {
     />
   );
 
+
+  const SubmitData = async (e) => {
+    e.preventDefault();
+    try {
+        await updateRecords({ demenagement, adresse, situation });
+        alert('Profile updated successfully!');
+    } catch (error) {
+        alert('Failed to update profile');
+    }
+};
+
   return (
     <>
       <Stack spacing={2.5} >
@@ -101,21 +119,23 @@ export function FileManagerView({ folders }) {
       <Grid container spacing={2}>
         <Grid xs={12} md={4}>
           <InputLabel mb={1}>Date de déménagement</InputLabel>
-          <DatePicker sx={{ width: '100%'}}/>
+          <DatePicker sx={{ width: '100%'}} value={demenagement}  onChange={(newValue) => {
+            setDemenagement(newValue);
+          }}/>
         </Grid>
         <Grid xs={12} md={4}>
           <InputLabel mb={1}>Résidence actuelle</InputLabel>
-          <TextField fullWidth/>
+          <TextField fullWidth value={adresse} onChange={(e)=>setAdresse(e.target.value)}/>
         </Grid>
         <Grid xs={12} md={4}>
           <InputLabel mb={1}>Situation familiale</InputLabel>
-          <Select fullWidth>
+          <Select fullWidth value={situation} onChange={(e)=>setSituation(e.target.value)}>
             <MenuItem value="Célébataire">Célébataire</MenuItem>
           </Select>
         </Grid>
       </Grid>
       <Stack py={2} alignItems="flex-end">
-        <Button variant='contained' color='primary'>Valider</Button>
+        <Button variant='contained' color='primary' onClick={(e)=>SubmitData(e)}>Valider</Button>
       </Stack>
       <Divider sx={{ my: 1, borderStyle: 'dashed' }} />
       <Typography mb={2} variant="h6">Documents à fournir</Typography>

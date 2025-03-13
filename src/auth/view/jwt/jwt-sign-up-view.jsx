@@ -27,8 +27,7 @@ import { SignUpTerms } from '../../components/sign-up-terms';
 // ----------------------------------------------------------------------
 
 export const SignUpSchema = zod.object({
-  firstName: zod.string().min(1, { message: 'First name is required!' }),
-  lastName: zod.string().min(1, { message: 'Last name is required!' }),
+  name: zod.string().min(1, { message: 'First name is required!' }),
   email: zod
     .string()
     .min(1, { message: 'Email is required!' })
@@ -51,8 +50,8 @@ export function JwtSignUpView() {
   const [errorMsg, setErrorMsg] = useState('');
 
   const defaultValues = {
-    firstName: 'Hello',
-    lastName: 'Friend',
+    name: 'Hello',
+    // lastName: 'Friend',
     email: 'hello@gmail.com',
     password: '@demo1',
   };
@@ -72,8 +71,8 @@ export function JwtSignUpView() {
       await signUp({
         email: data.email,
         password: data.password,
-        firstName: data.firstName,
-        lastName: data.lastName,
+        name: data.name,
+        // lastName: data.lastName,
       });
       await checkUserSession?.();
 
@@ -87,8 +86,7 @@ export function JwtSignUpView() {
   const renderForm = (
     <Box gap={3} display="flex" flexDirection="column">
       <Box display="flex" gap={{ xs: 3, sm: 2 }} flexDirection={{ xs: 'column', sm: 'row' }}>
-        <Field.Text name="firstName" label="Nom" InputLabelProps={{ shrink: true }} />
-        <Field.Text name="lastName" label="Prénom" InputLabelProps={{ shrink: true }} />
+        <Field.Text name="name" label="Nom" InputLabelProps={{ shrink: true }} />
       </Box>
 
       <Field.Text name="email" label="Email" InputLabelProps={{ shrink: true }} />

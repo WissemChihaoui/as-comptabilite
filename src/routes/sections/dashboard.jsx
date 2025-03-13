@@ -17,6 +17,8 @@ const Demande = lazy(() => import('src/pages/dashboard/demande'));
 
 const Sarl = lazy(() => import('src/pages/dashboard/sarl'));
 const SarlS = lazy(() => import('src/pages/dashboard/sarl-s'));
+
+const Hello = lazy(() => import('src/pages/dashboard/hello'))
 // ----------------------------------------------------------------------
 
 const layoutContent = (
@@ -38,6 +40,7 @@ export const dashboardRoutes = [
       { element: <Demande />, path: 'demande'},
       { element: <Sarl />, path: 'sarl'},
       { element: <SarlS />, path: 'sarls'},
+      { element: <Hello />, path: 'hello'},
     ],
   },
 ];

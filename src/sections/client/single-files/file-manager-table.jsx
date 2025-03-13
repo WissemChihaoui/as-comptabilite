@@ -23,7 +23,6 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Nom' },
   { id: 'type', label: 'Type', width: 120 },
   { id: 'createdAt', label: 'Date', width: 140 },
-  
   { id: '', width: 88 },
 ];
 

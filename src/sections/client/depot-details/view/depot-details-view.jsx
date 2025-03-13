@@ -26,18 +26,28 @@ import { Label } from 'src/components/label';
 import { MultiFilePreview, SingleFilePreview, Upload, UploadBox } from 'src/components/upload';
 import { useBoolean } from 'src/hooks/use-boolean';
 import { DashboardContent } from 'src/layouts/dashboard';
+import axios from 'axios';
+import { STORAGE_KEY } from 'src/auth/context/jwt';
+import { dropFiles } from 'src/actions/documents';
 
 export default function DepotDetailsView({ id }) {
   const [files, setFiles] = useState([]);
 
   const open = useBoolean();
 
-  const handleDropMultiFile = useCallback(
-    (acceptedFiles) => {
-      setFiles([...files, ...acceptedFiles]);
-    },
-    [files]
-  );
+  const handleDropMultiFile = useCallback(  
+    async (acceptedFiles) => {  
+  
+      try {  
+        const response = await dropFiles(acceptedFiles, 4, id); // Call dropFiles with the required parameters  
+        console.log("✅ Upload Successful:", response);  
+        setFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);  
+      } catch (error) {  
+        console.error("❌ Error uploading files:", error.message);  
+      }  
+    },  
+    [id]  
+  );    
 
   const handleRemoveFile = (inputFile) => {
     const filesFiltered = files.filter((fileFiltered) => fileFiltered !== inputFile);
@@ -78,6 +88,7 @@ export default function DepotDetailsView({ id }) {
           {files.length > 0 &&
             files.map((file, index) => (
               <Card
+              key={index}
                 sx={{
                   p: 3,
                   height: 250,
@@ -88,7 +99,7 @@ export default function DepotDetailsView({ id }) {
               >
                 <Typography>{file.name}</Typography>
                 <Box gap={2}>
-                  <TextField label="Nom de fichier" fullWidth />
+                  {/* <TextField label="Nom de fichier" fullWidth /> */}
                   <Button
                     sx={{ mt: 2 }}
                     variant="contained"

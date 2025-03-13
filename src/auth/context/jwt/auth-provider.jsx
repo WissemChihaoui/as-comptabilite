@@ -6,7 +6,7 @@ import axios, { endpoints } from 'src/utils/axios';
 
 import { STORAGE_KEY } from './constant';
 import { AuthContext } from '../auth-context';
-import { setSession, isValidToken } from './utils';
+import { setSession } from './utils';
 
 // ----------------------------------------------------------------------
 
@@ -20,7 +20,7 @@ export function AuthProvider({ children }) {
     try {
       const accessToken = sessionStorage.getItem(STORAGE_KEY);
 
-      if (accessToken && isValidToken(accessToken)) {
+      if (accessToken ) {
         setSession(accessToken);
 
         const res = await axios.get(endpoints.auth.me);
@@ -36,6 +36,8 @@ export function AuthProvider({ children }) {
       setState({ user: null, loading: false });
     }
   }, [setState]);
+
+
 
   useEffect(() => {
     checkUserSession();
@@ -63,6 +65,7 @@ export function AuthProvider({ children }) {
     }),
     [checkUserSession, state.user, status]
   );
+  // console.log(memoizedValue)
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;
 }

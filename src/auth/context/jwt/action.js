@@ -11,8 +11,10 @@ export const signInWithPassword = async ({ email, password }) => {
     const params = { email, password };
 
     const res = await axios.post(endpoints.auth.signIn, params);
-
+    
     const { accessToken } = res.data;
+   
+
 
     if (!accessToken) {
       throw new Error('Access token not found in response');
@@ -28,12 +30,11 @@ export const signInWithPassword = async ({ email, password }) => {
 /** **************************************
  * Sign up
  *************************************** */
-export const signUp = async ({ email, password, firstName, lastName }) => {
+export const signUp = async ({ email, password, name }) => {
   const params = {
     email,
     password,
-    firstName,
-    lastName,
+    name,
   };
 
   try {
@@ -57,6 +58,7 @@ export const signUp = async ({ email, password, firstName, lastName }) => {
  *************************************** */
 export const signOut = async () => {
   try {
+    const res = await axios.post(endpoints.auth.signOut);
     await setSession(null);
   } catch (error) {
     console.error('Error during sign out:', error);

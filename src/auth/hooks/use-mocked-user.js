@@ -1,4 +1,7 @@
+import dayjs from 'dayjs';
 import { _mock } from 'src/_mock';
+import { useGetUser } from 'src/actions/user';
+import { fDateTime } from 'src/utils/format-time';
 
 // To get the user from the <AuthContext/>, you can use
 
@@ -12,22 +15,25 @@ import { _mock } from 'src/_mock';
 
 // ----------------------------------------------------------------------
 
+
 export function useMockedUser() {
+  const { userData } = useGetUser()
+
+
   const user = {
-    id: '8864c717-587d-472a-929a-8e5f298024da-0',
-    displayName: 'Jaydon Frankie',
-    email: 'demo@minimals.cc',
+    id: userData?.id || '',
+    displayName: userData?.name || '',
+    email: userData?.email || '',
     photoURL: _mock.image.avatar(24),
-    phoneNumber: _mock.phoneNumber(1),
-    country: _mock.countryNames(1),
-    address: '90210 Broadway Blvd',
-    state: 'California',
-    city: 'San Francisco',
-    zipCode: '94116',
-    about: 'Praesent turpis. Phasellus viverra nulla ut metus varius laoreet. Phasellus tempus.',
-    role: 'admin',
+    matricule : userData?.matricule || '',
+    demenagement: dayjs(userData?.demenagement) || null,
+    adresse: userData?.adresse || '',
+    situation: userData?.situation || '',
+    role: 'client',
     isPublic: true,
   };
+
+  console.log("user :", user)
 
   return { user };
 }

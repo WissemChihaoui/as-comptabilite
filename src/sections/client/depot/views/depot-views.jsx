@@ -4,10 +4,13 @@ import { Iconify } from 'src/components/iconify';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { paths } from 'src/routes/paths';
 import { DECLARATION_IMPOT } from 'src/_mock/_categories';
+import { ProductItemSkeleton } from 'src/components/skeleton/product-skeleton';
 import { Label } from 'src/components/label';
 import { FileManagerView } from '../../file-manager/view';
 
-export default function DepotView() {
+export default function DepotView({data, loading}) {
+    const renderLoading = <ProductItemSkeleton />;
+  
   return (
     <>
       <DashboardContent>
@@ -29,7 +32,7 @@ export default function DepotView() {
           }
           sx={{ mb: { xs: 3, md: 5 } }}
         />
-        <FileManagerView folders={DECLARATION_IMPOT}/>
+        {loading ? renderLoading : <FileManagerView folders={data} /> }
       </DashboardContent>
     </>
   );

@@ -28,9 +28,12 @@ import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { FileThumbnail } from 'src/components/file-thumbnail';
+import { dropFiles } from 'src/actions/documents';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 import { Upload, UploadBox } from 'src/components/upload';
 import { Box, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import axios from 'axios';
+import { STORAGE_KEY } from 'src/auth/context/jwt';
 
 import { FileManagerShareDialog } from './file-manager-share-dialog';
 import { FileManagerFileDetails } from './file-manager-file-details';
@@ -40,7 +43,7 @@ import { FileManagerFileDetails } from './file-manager-file-details';
 export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow }) {
   const theme = useTheme();
 
-  const [file, setFile] = useState("");
+  const [file, setFile] = useState([]);
 
   const { copy } = useCopyToClipboard();
 
@@ -69,19 +72,32 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
     doubleClick: () => console.info('DOUBLE CLICK'),
   });
 
-  const handleDrop = useCallback(
-    (acceptedFile) => {
-      setFile(acceptedFile);
-      console.log(file)
-    },
-    [file]
-  );
+  const handleDrop = useCallback((acceptedFiles) => {
+    setFile(acceptedFiles); // Store the selected file(s)
+  }, []);
 
   const handleCopy = useCallback(() => {
     toast.success('Copied!');
     copy(row.url);
   }, [copy, row.url]);
 
+  // const { upload, uploading, uploadError, uploadResponse } = useUploadDoc();
+
+  const handleSubmit = async () => {  
+    if (!file || file.length === 0) {  
+      console.error("No file selected");  
+      return;  
+    }  
+  
+    const selectedFile = file[0]; // Extract the file  
+    try {  
+      const response = await dropFiles([selectedFile], row.service_id, row.id); // Calling dropFiles for a single file  
+      console.log("✅ Upload Successful:", response);  
+      openUpload.onFalse(); // Close dialog or reset any relevant state  
+    } catch (error) {  
+      console.error("❌ Upload Error:", error.message);  
+    }  
+  };
   const defaultStyles = {
     borderTop: `solid 1px ${varAlpha(theme.vars.palette.grey['500Channel'], 0.16)}`,
     borderBottom: `solid 1px ${varAlpha(theme.vars.palette.grey['500Channel'], 0.16)}`,
@@ -262,7 +278,7 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={openUpload.onFalse} variant='contained'>Enregistrer</Button>
+          <Button onClick={()=>handleSubmit()} variant='contained'>Enregistrer</Button>
         </DialogActions>
       </Dialog>
     </>

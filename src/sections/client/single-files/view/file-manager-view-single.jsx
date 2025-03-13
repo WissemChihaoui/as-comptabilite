@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 import Button from '@mui/material/Button';
 
@@ -6,33 +6,38 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import { useSetState } from 'src/hooks/use-set-state';
 
 import { fIsAfter, fIsBetween } from 'src/utils/format-time';
-import { Stack } from '@mui/material';
+import { Divider, InputLabel, Stack, TextField, Typography } from '@mui/material';
 
 import { toast } from 'src/components/snackbar';
 import { fileFormat } from 'src/components/file-thumbnail';
 import { EmptyContent } from 'src/components/empty-content';
 import { ConfirmDialog } from 'src/components/custom-dialog';
+import Grid from '@mui/material/Unstable_Grid2';
+import { useMockedUser } from 'src/auth/hooks';
 import { useTable, rowInPage, getComparator } from 'src/components/table';
+import { usePutRecords } from 'src/actions/user';
 
 import { FileManagerTable } from '../file-manager-table';
-import { FileManagerGridView } from '../file-manager-grid-view';
-import { FileManagerFiltersResult } from '../file-manager-filters-result';
 import { FileManagerNewFolderDialog } from '../file-manager-new-folder-dialog';
 
 // ----------------------------------------------------------------------
 
 export function FileManagerView({ files }) {
-  const table = useTable({ defaultRowsPerPage: 10 });
+  const { user } = useMockedUser();
 
-  const openDateRange = useBoolean();
+    const { updateMatricule } = usePutRecords();
+
+  const [matricule, setMatricule] = useState(user.matricule);
+
+  const table = useTable({ defaultRowsPerPage: 10 });
 
   const confirm = useBoolean();
 
   const upload = useBoolean();
 
-  const [view, setView] = useState('list');
-
   const [tableData, setTableData] = useState(files);
+
+  console.log(tableData)
 
   const filters = useSetState({
     name: '',
@@ -58,12 +63,6 @@ export function FileManagerView({ files }) {
     (!!filters.state.startDate && !!filters.state.endDate);
 
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
-
-  const handleChangeView = useCallback((event, newView) => {
-    if (newView !== null) {
-      setView(newView);
-    }
-  }, []);
 
   const handleDeleteItem = useCallback(
     (id) => {
@@ -91,16 +90,34 @@ export function FileManagerView({ files }) {
     });
   }, [dataFiltered.length, dataInPage.length, table, tableData]);
 
-  const renderResults = (
-    <FileManagerFiltersResult
-      filters={filters}
-      totalResults={dataFiltered.length}
-      onResetPage={table.onResetPage}
-    />
-  );
+  const SubmitData = async (e) => {
+    e.preventDefault();
+    try {
+        await updateMatricule({ matricule });
+        alert('Profile updated successfully!');
+    } catch (error) {
+        alert('Failed to update profile');
+    }
+};
+
 
   return (
     <>
+      <Typography mb={2} variant="h6">
+        Information générale
+      </Typography>
+      <Grid container spacing={2}>
+        <Grid xs={12} md={4}>
+          <InputLabel mb={1}>Numéro de matricule luxembourgeois</InputLabel>
+          <TextField fullWidth value={matricule} onChange={(e) => setMatricule(e.target.value)} />
+        </Grid>
+      </Grid>
+      <Stack py={2} alignItems="flex-end">
+        <Button variant="contained" color="primary" onClick={(e)=>SubmitData(e)}>
+          Valider
+        </Button>
+      </Stack>
+      <Divider sx={{ my: 1, borderStyle: 'dashed' }} />
       {notFound ? (
         <EmptyContent filled sx={{ py: 10 }} />
       ) : (
@@ -115,7 +132,9 @@ export function FileManagerView({ files }) {
 
       <FileManagerNewFolderDialog open={upload.value} onClose={upload.onFalse} />
       <Stack my={2} alignItems="flex-start">
-        <Button variant='contained' color='primary'>Envoyer ma demande</Button>
+        <Button variant="contained" color="primary">
+          Envoyer ma demande
+        </Button>
       </Stack>
       <ConfirmDialog
         open={confirm.value}
