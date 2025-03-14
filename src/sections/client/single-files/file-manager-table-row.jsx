@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -76,12 +76,34 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
     setFile(acceptedFiles); // Store the selected file(s)
   }, []);
 
+  console.log(file)
+
   const handleCopy = useCallback(() => {
     toast.success('Copied!');
     copy(row.url);
   }, [copy, row.url]);
 
   // const { upload, uploading, uploadError, uploadResponse } = useUploadDoc();
+  
+  useEffect(() => {  
+    const fetchDocumentDetails = async () => {  
+      
+      try {  
+        const response = await axios.get(`http://127.0.0.1:8000/api/documents/${row.id}`, {  
+          headers: {  
+            Authorization: `Bearer ${sessionStorage.getItem(STORAGE_KEY)}`,  
+          },  
+        });  
+        setFile(response.data); // Set the fetched document details  
+      } catch (err) {  
+        console.error(err);  
+      } 
+    };  
+
+    if (row.id) { // Only fetch if row.id exists  
+      fetchDocumentDetails();  
+    }  
+  }, [row.id]); 
 
   const handleSubmit = async () => {  
     if (!file || file.length === 0) {  
@@ -133,7 +155,7 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
       >
         <TableCell onClick={handleClick}>
           <Stack direction="row" alignItems="center" spacing={2}>
-            <FileThumbnail file={`${file[0]?.name.split('.').pop()}` || 'pdf'} />
+            <FileThumbnail file={`${file.original_name?.split('.').pop()}` || 'pdf'} />
 
             <Typography
               noWrap
@@ -146,7 +168,7 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
               >
               <ListItemText
                 primary={row.name}
-                secondary={file[0]?.name}
+                secondary={file.original_name}
                 primaryTypographyProps={{ typography: 'body2' }}
                 secondaryTypographyProps={{ mt: 0.5, component: 'span', typography: 'caption' }}
               />
@@ -155,7 +177,7 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
         </TableCell>
 
         <TableCell onClick={handleClick} sx={{ whiteSpace: 'nowrap' }}>
-        {file[0]?.name.split('.').pop()}
+        {file.original_name?.split('.').pop()}
         </TableCell>
 
         <TableCell onClick={handleClick} sx={{ whiteSpace: 'nowrap' }}>

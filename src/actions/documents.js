@@ -30,14 +30,16 @@ export function useGetDocuments(i) {
 }  
 
 export async function dropFiles(files, serviceId, documentId) {  
-  const url = "http://127.0.0.1:8000/api/documents/upload";
+  console.log('files:', files)
   const formData = new FormData();  
+  const url = "http://127.0.0.1:8000/api/documents/upload";
 
   formData.append('service_id', serviceId);  
+  console.log(formData)
   formData.append('document_id', documentId);  
   
   files.forEach((file) => {  
-    formData.append('files[]', file); // Append multiple files  
+    formData.append('file[]', file); // Append multiple files  
   });  
 
   try {  
@@ -62,3 +64,18 @@ export async function dropFiles(files, serviceId, documentId) {
     }  
   }  
 }  
+
+export const fetchDocuments = async (serviceId) => {
+  try {
+    const response = await axios.get(`http://127.0.0.1:8000/api/user/documents/${serviceId}`, {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem(STORAGE_KEY)}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching documents:", error);
+    return [];
+  }
+};
+

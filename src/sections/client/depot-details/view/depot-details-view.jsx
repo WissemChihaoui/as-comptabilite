@@ -7,55 +7,85 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
-  FormLabel,
   InputLabel,
   MenuItem,
   OutlinedInput,
   Select,
-  Stack,
   TextField,
   Typography,
 } from '@mui/material';
 import { paths } from 'src/routes/paths';
-import Grid from '@mui/material/Unstable_Grid2';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { Iconify } from 'src/components/iconify';
-import { Label } from 'src/components/label';
-import { MultiFilePreview, SingleFilePreview, Upload, UploadBox } from 'src/components/upload';
+import { UploadBox } from 'src/components/upload';
 import { useBoolean } from 'src/hooks/use-boolean';
 import { DashboardContent } from 'src/layouts/dashboard';
-import axios from 'axios';
+import { dropFiles, fetchDocuments } from 'src/actions/documents';
+import { fDate } from 'src/utils/format-time';
 import { STORAGE_KEY } from 'src/auth/context/jwt';
-import { dropFiles } from 'src/actions/documents';
 
 export default function DepotDetailsView({ id }) {
   const [files, setFiles] = useState([]);
-
+  useEffect(() => {
+    const loadDocuments = async () => {
+      try {
+        const documents = await fetchDocuments(4);
+        console.log(documents);
+        setFiles(documents.filter((row) => row.document_id === Number(id)));
+      } catch (error) {
+        console.error('Error fetching documents:', error);
+      }
+    };
+    loadDocuments();
+  }, [id]);
   const open = useBoolean();
+  console.log('files :', files);
+  const handleDropMultiFile = useCallback(
+    async (acceptedFiles) => {
+      try {
+        const response = await dropFiles(acceptedFiles, 4, id); // Call dropFiles with the required parameters
+        console.log('✅ Upload Successful:', response);
+        setFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
+      } catch (error) {
+        console.error('❌ Error uploading files:', error.message);
+      }
+    },
+    [id]
+  );
 
-  const handleDropMultiFile = useCallback(  
-    async (acceptedFiles) => {  
-  
-      try {  
-        const response = await dropFiles(acceptedFiles, 4, id); // Call dropFiles with the required parameters  
-        console.log("✅ Upload Successful:", response);  
-        setFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);  
-      } catch (error) {  
-        console.error("❌ Error uploading files:", error.message);  
-      }  
-    },  
-    [id]  
-  );    
+  const handleRemoveFile = async (inputFile) => {
+    try {
+      const token = sessionStorage.getItem(STORAGE_KEY); // Retrieve auth token from storage
+      console.log(token);
+      const response = await fetch(`http://127.0.0.1:8000/api/documents/${inputFile.id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`, // Include auth token
+          'Content-Type': 'application/json',
+        },
+      });
 
-  const handleRemoveFile = (inputFile) => {
-    const filesFiltered = files.filter((fileFiltered) => fileFiltered !== inputFile);
-    setFiles(filesFiltered);
-  };
+      if (!response.ok) {
+        // Check if the response has a body
+        const errorData = await response.text(); // Use text() to handle empty responses
+        let jsonData;
+        try {
+          jsonData = JSON.parse(errorData); // Attempt to parse JSON
+        } catch {
+          throw new Error(errorData || 'Erreur lors de la suppression');
+        }
+        throw new Error(jsonData.message || 'Erreur lors de la suppression');
+      }
 
-  const handleRemoveAllFiles = () => {
-    setFiles([]);
+      // Update UI by filtering out the deleted file
+      setFiles((prevFiles) => prevFiles.filter((file) => file.id !== inputFile.id));
+
+      console.log('✅ Document supprimé avec succès');
+    } catch (error) {
+      console.error('❌ Erreur de suppression:', error.message);
+    }
   };
   console.log(files);
   return (
@@ -77,7 +107,6 @@ export default function DepotDetailsView({ id }) {
               name: 'Déposer',
             },
           ]}
-          
           sx={{ mb: { xs: 3, md: 5 } }}
         />
         <Box
@@ -88,7 +117,7 @@ export default function DepotDetailsView({ id }) {
           {files.length > 0 &&
             files.map((file, index) => (
               <Card
-              key={index}
+                key={index}
                 sx={{
                   p: 3,
                   height: 250,
@@ -97,7 +126,8 @@ export default function DepotDetailsView({ id }) {
                   flexDirection: 'column',
                 }}
               >
-                <Typography>{file.name}</Typography>
+                <Typography>{file.original_name}</Typography>
+                <Typography variant="caption">{fDate(file.updated_at)}</Typography>
                 <Box gap={2}>
                   {/* <TextField label="Nom de fichier" fullWidth /> */}
                   <Button
@@ -132,7 +162,6 @@ export default function DepotDetailsView({ id }) {
               value={files}
               onDrop={handleDropMultiFile}
               onRemove={handleRemoveFile}
-              onRemoveAll={handleRemoveAllFiles}
               onUpload={() => console.info('ON UPLOAD')}
             />
           </Card>
@@ -146,15 +175,21 @@ export default function DepotDetailsView({ id }) {
             <DatePicker label="Date de déménagement" sx={{ mb: 2.5 }} />
             <TextField label="Résidence actuelle" sx={{ mb: 2.5 }} />
             <FormControl>
-            <InputLabel htmlFor="depot-situation-familiale">Situation familiale</InputLabel>
-            <Select inputProps={{ id: 'depot-situation-familiale' }} label="Situation familiale" input={<OutlinedInput label="Situation familiale" />}>
+              <InputLabel htmlFor="depot-situation-familiale">Situation familiale</InputLabel>
+              <Select
+                inputProps={{ id: 'depot-situation-familiale' }}
+                label="Situation familiale"
+                input={<OutlinedInput label="Situation familiale" />}
+              >
                 <MenuItem value="Celebataire">Célébataire</MenuItem>
-            </Select>
+              </Select>
             </FormControl>
           </Box>
         </DialogContent>
         <DialogActions>
-            <Button variant='contained' color='primary'>Enregistrer</Button>
+          <Button variant="contained" color="primary">
+            Enregistrer
+          </Button>
         </DialogActions>
       </Dialog>
     </>
