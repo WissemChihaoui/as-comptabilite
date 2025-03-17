@@ -15,17 +15,15 @@ import { fDateTime } from 'src/utils/format-time';
 
 // ----------------------------------------------------------------------
 
-
 export function useMockedUser() {
-  const { userData } = useGetUser()
-
+  const { userData } = useGetUser();
 
   const user = {
     id: userData?.id || '',
     displayName: userData?.name || '',
     email: userData?.email || '',
     photoURL: _mock.image.avatar(24),
-    matricule : userData?.matricule || '',
+    matricule: userData?.matricule || '',
     demenagement: dayjs(userData?.demenagement) || null,
     adresse: userData?.adresse || '',
     situation: userData?.situation || '',
@@ -33,7 +31,7 @@ export function useMockedUser() {
     isPublic: true,
   };
 
-  console.log("user :", user)
+  // console.log("user :", user)
 
   return { user };
 }

@@ -25,7 +25,7 @@ import { FileManagerNewFolderDialog } from '../file-manager-new-folder-dialog';
 export function FileManagerView({ files }) {
   const { user } = useMockedUser();
 
-    const { updateMatricule } = usePutRecords();
+  const { updateMatricule } = usePutRecords();
 
   const [matricule, setMatricule] = useState(user.matricule);
 
@@ -37,7 +37,7 @@ export function FileManagerView({ files }) {
 
   const [tableData, setTableData] = useState(files);
 
-  console.log(tableData)
+  // console.log(tableData)
 
   const filters = useSetState({
     name: '',
@@ -93,13 +93,12 @@ export function FileManagerView({ files }) {
   const SubmitData = async (e) => {
     e.preventDefault();
     try {
-        await updateMatricule({ matricule });
-        alert('Profile updated successfully!');
+      await updateMatricule({ matricule });
+      alert('Profile updated successfully!');
     } catch (error) {
-        alert('Failed to update profile');
+      alert('Failed to update profile');
     }
-};
-
+  };
 
   return (
     <>
@@ -113,7 +112,7 @@ export function FileManagerView({ files }) {
         </Grid>
       </Grid>
       <Stack py={2} alignItems="flex-end">
-        <Button variant="contained" color="primary" onClick={(e)=>SubmitData(e)}>
+        <Button variant="contained" color="primary" onClick={(e) => SubmitData(e)}>
           Valider
         </Button>
       </Stack>

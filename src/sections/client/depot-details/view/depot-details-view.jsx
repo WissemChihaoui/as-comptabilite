@@ -32,7 +32,7 @@ export default function DepotDetailsView({ id }) {
     const loadDocuments = async () => {
       try {
         const documents = await fetchDocuments(4);
-        console.log(documents);
+        // console.log(documents);
         setFiles(documents.filter((row) => row.document_id === Number(id)));
       } catch (error) {
         console.error('Error fetching documents:', error);
@@ -41,12 +41,12 @@ export default function DepotDetailsView({ id }) {
     loadDocuments();
   }, [id]);
   const open = useBoolean();
-  console.log('files :', files);
+  // console.log('files :', files);
   const handleDropMultiFile = useCallback(
     async (acceptedFiles) => {
       try {
         const response = await dropFiles(acceptedFiles, 4, id); // Call dropFiles with the required parameters
-        console.log('✅ Upload Successful:', response);
+        // console.log('✅ Upload Successful:', response);
         setFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
       } catch (error) {
         console.error('❌ Error uploading files:', error.message);
@@ -58,7 +58,7 @@ export default function DepotDetailsView({ id }) {
   const handleRemoveFile = async (inputFile) => {
     try {
       const token = sessionStorage.getItem(STORAGE_KEY); // Retrieve auth token from storage
-      console.log(token);
+      // console.log(token);
       const response = await fetch(`http://127.0.0.1:8000/api/documents/${inputFile.id}`, {
         method: 'DELETE',
         headers: {
@@ -82,12 +82,12 @@ export default function DepotDetailsView({ id }) {
       // Update UI by filtering out the deleted file
       setFiles((prevFiles) => prevFiles.filter((file) => file.id !== inputFile.id));
 
-      console.log('✅ Document supprimé avec succès');
+      // console.log('✅ Document supprimé avec succès');
     } catch (error) {
       console.error('❌ Erreur de suppression:', error.message);
     }
   };
-  console.log(files);
+  // console.log(files);
   return (
     <>
       <DashboardContent>

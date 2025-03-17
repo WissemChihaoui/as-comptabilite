@@ -12,69 +12,67 @@ const swrOptions = {
 };
 
 export function useGetUser() {
-    const url = endpoints.auth.me;
+  const url = endpoints.auth.me;
 
-    const { data, isLoading, error, isValidating } = useSWR(url, fetcher, swrOptions);
-    console.log(data)
-    const memorizedValue = useMemo(
-        () => ({
-            userData: data || []
-        }),
-        [data]
-    );
+  const { data, isLoading, error, isValidating } = useSWR(url, fetcher, swrOptions);
+  // console.log(data)
+  const memorizedValue = useMemo(
+    () => ({
+      userData: data || [],
+    }),
+    [data]
+  );
 
-    return memorizedValue
+  return memorizedValue;
 }
 
 export function usePutRecords() {
-    const updateRecords = async ({ demenagement, adresse, situation }) => {
-        const date = fDate(demenagement)
-        try {
-            const url = "http://127.0.0.1:8000/api/user/profile"; // Use correct API path
-            const params = { date, adresse, situation };
+  const updateRecords = async ({ demenagement, adresse, situation }) => {
+    const date = fDate(demenagement);
+    try {
+      const url = 'http://127.0.0.1:8000/api/user/profile'; // Use correct API path
+      const params = { date, adresse, situation };
 
-            console.log("Updating records with:", params);
+      // console.log("Updating records with:", params);
 
-            const res = await axios.put(url, params, {
-                headers: {
-                    Authorization: `Bearer ${sessionStorage.getItem(STORAGE_KEY)}`, // Ensure the user is authenticated
-                    'Content-Type': 'application/json',
-                },
-            });
+      const res = await axios.put(url, params, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem(STORAGE_KEY)}`, // Ensure the user is authenticated
+          'Content-Type': 'application/json',
+        },
+      });
 
-            // Mutate the SWR cache to update the user info after the change
-            mutate(endpoints.auth.me);
+      // Mutate the SWR cache to update the user info after the change
+      mutate(endpoints.auth.me);
 
-            return res.data;
-        } catch (error) {
-            console.error('Error updating user records:', error);
-            throw error;
-        }
-    };
-    const updateMatricule = async ({ matricule }) => {
-        try {
-            const url = "http://127.0.0.1:8000/api/user/profile/matricule";
-            const params = { matricule };
+      return res.data;
+    } catch (error) {
+      console.error('Error updating user records:', error);
+      throw error;
+    }
+  };
+  const updateMatricule = async ({ matricule }) => {
+    try {
+      const url = 'http://127.0.0.1:8000/api/user/profile/matricule';
+      const params = { matricule };
 
-            console.log("Updating records with:", params);
+      // console.log("Updating records with:", params);
 
-            const res = await axios.put(url, params, {
-                headers: {
-                    Authorization: `Bearer ${sessionStorage.getItem(STORAGE_KEY)}`,
-                    'Content-Type': 'application/json',
-                },
-            });
+      const res = await axios.put(url, params, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem(STORAGE_KEY)}`,
+          'Content-Type': 'application/json',
+        },
+      });
 
-            mutate(endpoints.auth.me);
+      mutate(endpoints.auth.me);
 
-            return res.data;
-        } catch (error) {
-            console.error('Error updating user records:', error);
-            throw error;
-        }
-    };
+      return res.data;
+    } catch (error) {
+      console.error('Error updating user records:', error);
+      throw error;
+    }
+  };
 
-
-
-    return { updateRecords, updateMatricule };
+  return { updateRecords, updateMatricule };
 }

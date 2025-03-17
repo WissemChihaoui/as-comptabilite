@@ -20,7 +20,7 @@ export function AuthProvider({ children }) {
     try {
       const accessToken = sessionStorage.getItem(STORAGE_KEY);
 
-      if (accessToken ) {
+      if (accessToken) {
         setSession(accessToken);
 
         const res = await axios.get(endpoints.auth.me);
@@ -36,8 +36,6 @@ export function AuthProvider({ children }) {
       setState({ user: null, loading: false });
     }
   }, [setState]);
-
-
 
   useEffect(() => {
     checkUserSession();
@@ -65,7 +63,7 @@ export function AuthProvider({ children }) {
     }),
     [checkUserSession, state.user, status]
   );
-  // console.log(memoizedValue)
+  // // console.log(memoizedValue)
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;
 }

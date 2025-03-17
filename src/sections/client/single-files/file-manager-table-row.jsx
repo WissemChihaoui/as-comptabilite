@@ -45,6 +45,8 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
 
   const [file, setFile] = useState([]);
 
+  // console.log(file)
+
   const { copy } = useCopyToClipboard();
 
   const openUpload = useBoolean();
@@ -76,7 +78,7 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
     setFile(acceptedFiles); // Store the selected file(s)
   }, []);
 
-  console.log(file)
+  // console.log(file)
 
   const handleCopy = useCallback(() => {
     toast.success('Copied!');
@@ -84,41 +86,41 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
   }, [copy, row.url]);
 
   // const { upload, uploading, uploadError, uploadResponse } = useUploadDoc();
-  
-  useEffect(() => {  
-    const fetchDocumentDetails = async () => {  
-      
-      try {  
-        const response = await axios.get(`http://127.0.0.1:8000/api/documents/${row.id}`, {  
-          headers: {  
-            Authorization: `Bearer ${sessionStorage.getItem(STORAGE_KEY)}`,  
-          },  
-        });  
-        setFile(response.data); // Set the fetched document details  
-      } catch (err) {  
-        console.error(err);  
-      } 
-    };  
 
-    if (row.id) { // Only fetch if row.id exists  
-      fetchDocumentDetails();  
-    }  
-  }, [row.id]); 
+  useEffect(() => {
+    const fetchDocumentDetails = async () => {
+      try {
+        const response = await axios.get(`http://127.0.0.1:8000/api/documents/${row.id}`, {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem(STORAGE_KEY)}`,
+          },
+        });
+        setFile({ name: response.data.original_name }); // Set the fetched document details
+      } catch (err) {
+        console.error(err);
+      }
+    };
 
-  const handleSubmit = async () => {  
-    if (!file || file.length === 0) {  
-      console.error("No file selected");  
-      return;  
-    }  
-  
-    const selectedFile = file[0]; // Extract the file  
-    try {  
-      const response = await dropFiles([selectedFile], row.service_id, row.id); // Calling dropFiles for a single file  
-      console.log("✅ Upload Successful:", response);  
-      openUpload.onFalse(); // Close dialog or reset any relevant state  
-    } catch (error) {  
-      console.error("❌ Upload Error:", error.message);  
-    }  
+    if (row.id) {
+      // Only fetch if row.id exists
+      fetchDocumentDetails();
+    }
+  }, [row.id]);
+
+  const handleSubmit = async () => {
+    if (!file || file.length === 0) {
+      console.error('No file selected');
+      return;
+    }
+
+    const selectedFile = file[0]; // Extract the file
+    try {
+      const response = await dropFiles([selectedFile], row.service_id, row.id); // Calling dropFiles for a single file
+      // console.log("✅ Upload Successful:", response);
+      openUpload.onFalse(); // Close dialog or reset any relevant state
+    } catch (error) {
+      console.error('❌ Upload Error:', error.message);
+    }
   };
   const defaultStyles = {
     borderTop: `solid 1px ${varAlpha(theme.vars.palette.grey['500Channel'], 0.16)}`,
@@ -135,6 +137,24 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
     },
   };
 
+  const deleteFile = async () => {
+    try {
+      await axios.delete(`http://127.0.0.1:8000/api/documents/${row.id}`, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem(STORAGE_KEY)}`,
+        },
+      });
+
+      // Execute the parent callback for deleting the document from the state
+
+      setFile('');
+      confirm.onFalse();
+      toast.info('Document deleted successfully.');
+    } catch (error) {
+      toast.info('Failed to delete document.');
+      console.error(error);
+    }
+  };
   return (
     <>
       <TableRow
@@ -155,7 +175,7 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
       >
         <TableCell onClick={handleClick}>
           <Stack direction="row" alignItems="center" spacing={2}>
-            <FileThumbnail file={`${file.original_name?.split('.').pop()}` || 'pdf'} />
+            <FileThumbnail file={`${file.name?.split('.').pop()}` || 'pdf'} />
 
             <Typography
               noWrap
@@ -165,10 +185,10 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
                 cursor: 'pointer',
                 ...(details.value && { fontWeight: 'fontWeightBold' }),
               }}
-              >
+            >
               <ListItemText
                 primary={row.name}
-                secondary={file.original_name}
+                secondary={file.name}
                 primaryTypographyProps={{ typography: 'body2' }}
                 secondaryTypographyProps={{ mt: 0.5, component: 'span', typography: 'caption' }}
               />
@@ -177,7 +197,7 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
         </TableCell>
 
         <TableCell onClick={handleClick} sx={{ whiteSpace: 'nowrap' }}>
-        {file.original_name?.split('.').pop()}
+          {file.name?.split('.').pop()}
         </TableCell>
 
         <TableCell onClick={handleClick} sx={{ whiteSpace: 'nowrap' }}>
@@ -275,10 +295,7 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
         title="Supprimer"
         content="Êtes-vous sûr de vouloir effacer ?"
         action={
-          <Button variant="contained" color="error" onClick={()=>{
-            setFile(''); 
-            confirm.onFalse()
-            }}>
+          <Button variant="contained" color="error" onClick={() => deleteFile()}>
             Supprimer
           </Button>
         }
@@ -287,7 +304,7 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
       <Dialog open={openUpload.value} onClose={openUpload.onFalse}>
         <DialogTitle>Ajouter un fichier à {row.name}</DialogTitle>
         <DialogContent>
-        <Upload
+          <Upload
             onDrop={handleDrop}
             placeholder={
               <Stack spacing={0.5} alignItems="center">
@@ -300,7 +317,9 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={()=>handleSubmit()} variant='contained'>Enregistrer</Button>
+          <Button onClick={() => handleSubmit()} variant="contained">
+            Enregistrer
+          </Button>
         </DialogActions>
       </Dialog>
     </>

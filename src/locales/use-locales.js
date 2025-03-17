@@ -19,8 +19,8 @@ export function useTranslate(ns) {
   const onChangeLang = useCallback(
     async (newLang) => {
       try {
-        console.log(newLang);
-        
+        // console.log(newLang);
+
         const langChangePromise = i18n.changeLanguage(newLang);
 
         const currentMessages = messages[newLang] || messages.en;

@@ -19,7 +19,7 @@ export function jwtDecode(token) {
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
     const decoded = JSON.parse(atob(base64));
 
-    console.log('Decoded Token:', decoded); // Log decoded token for debugging
+    // console.log('Decoded Token:', decoded); // Log decoded token for debugging
     return decoded;
   } catch (error) {
     console.error('Error decoding token:', error);
@@ -27,12 +27,11 @@ export function jwtDecode(token) {
   }
 }
 
-
 // ----------------------------------------------------------------------
 
 export function isValidToken(accessToken) {
-  console.log('Access Token:', accessToken);
-console.log('Decoded Token:', jwtDecode(accessToken));
+  // console.log('Access Token:', accessToken);
+  // console.log('Decoded Token:', jwtDecode(accessToken));
   if (!accessToken) {
     return false;
   }
@@ -54,7 +53,6 @@ console.log('Decoded Token:', jwtDecode(accessToken));
   }
 }
 
-
 // ----------------------------------------------------------------------
 
 export function tokenExpired(exp) {
@@ -74,21 +72,19 @@ export function tokenExpired(exp) {
   }
 }
 
-
 // ----------------------------------------------------------------------
 
 export async function setSession(accessToken = sessionStorage.getItem(STORAGE_KEY)) {
   sessionStorage.setItem(STORAGE_KEY, accessToken);
-  console.log("hey", accessToken)
+  // console.log("hey", accessToken)
   if (accessToken) {
     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
   } else {
-    console.log('No valid token found');
+    // console.log('No valid token found');
   }
   // try {
   //   if (accessToken && isValidToken(accessToken)) {
   //     sessionStorage.setItem(STORAGE_KEY, accessToken);
-
 
   //     const decodedToken = jwtDecode(accessToken);
   //     if (decodedToken && 'exp' in decodedToken) {
@@ -105,4 +101,3 @@ export async function setSession(accessToken = sessionStorage.getItem(STORAGE_KE
   //   throw error;
   // }
 }
-
