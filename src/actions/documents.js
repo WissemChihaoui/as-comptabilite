@@ -65,9 +65,9 @@ export async function dropFiles(files, serviceId, documentId) {
   }
 }
 
-export const fetchDocuments = async (serviceId) => {
+export const fetchDocuments = async (serviceId, id) => {
   try {
-    const response = await axios.get(`http://127.0.0.1:8000/api/user/documents/${serviceId}`, {
+    const response = await axios.get(`http://127.0.0.1:8000/api/user/documents/${serviceId}/${id}`, {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem(STORAGE_KEY)}`,
       },

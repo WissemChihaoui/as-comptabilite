@@ -92,12 +92,11 @@ export function FileManagerView({ files }) {
 
   const SubmitData = async (e) => {
     e.preventDefault();
-    try {
-      await updateMatricule({ matricule });
-      alert('Profile updated successfully!');
-    } catch (error) {
-      alert('Failed to update profile');
-    }
+    toast.promise(updateMatricule({ matricule }), {
+      loading: 'Mise à jour en cours...',
+      success: 'Profil mis à jour avec succès!',
+      error: 'Échec de la mise à jour du profil!',
+    });
   };
 
   return (

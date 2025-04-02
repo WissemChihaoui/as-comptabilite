@@ -23,15 +23,19 @@ import { UploadBox } from 'src/components/upload';
 import { useBoolean } from 'src/hooks/use-boolean';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { dropFiles, fetchDocuments } from 'src/actions/documents';
-import { fDate } from 'src/utils/format-time';
+import { fDate, today } from 'src/utils/format-time';
 import { STORAGE_KEY } from 'src/auth/context/jwt';
+import { toast } from 'sonner';
+import { ConfirmDialog } from 'src/components/custom-dialog';
+import DepotDetailsRow from '../depot-details-row';
 
 export default function DepotDetailsView({ id }) {
   const [files, setFiles] = useState([]);
+
   useEffect(() => {
     const loadDocuments = async () => {
       try {
-        const documents = await fetchDocuments(4);
+        const documents = await fetchDocuments(4, id);
         // console.log(documents);
         setFiles(documents.filter((row) => row.document_id === Number(id)));
       } catch (error) {
@@ -40,54 +44,69 @@ export default function DepotDetailsView({ id }) {
     };
     loadDocuments();
   }, [id]);
-  const open = useBoolean();
-  // console.log('files :', files);
+
   const handleDropMultiFile = useCallback(
     async (acceptedFiles) => {
       try {
-        const response = await dropFiles(acceptedFiles, 4, id); // Call dropFiles with the required parameters
-        // console.log('✅ Upload Successful:', response);
-        setFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
+        // Upload files
+        await dropFiles(acceptedFiles, 4, id); // Upload files
+
+        toast.success('Fichiers ajoutés');
+
+        // Reload the file list from the database
+        const documents = await fetchDocuments(4, id);
+        setFiles(documents.filter((row) => row.document_id === Number(id)));
       } catch (error) {
-        console.error('❌ Error uploading files:', error.message);
+        // Check if error has response and message (from backend)
+        if (error.response && error.response.data && error.response.data.message) {
+          toast.error(error.response.data.message); // Display the backend error message
+        } else {
+          toast.error('Erreur ajout');
+        }
       }
     },
     [id]
   );
 
-  const handleRemoveFile = async (inputFile) => {
-    try {
-      const token = sessionStorage.getItem(STORAGE_KEY); // Retrieve auth token from storage
-      // console.log(token);
-      const response = await fetch(`http://127.0.0.1:8000/api/documents/${inputFile.id}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`, // Include auth token
-          'Content-Type': 'application/json',
-        },
-      });
+  const handleRemoveFile = (inputFile) => {
+    const token = sessionStorage.getItem(STORAGE_KEY); // Retrieve auth token
 
+    // Create a Promise without an async executor
+    const deletePromise = fetch(`http://127.0.0.1:8000/api/documents/${inputFile.id}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }).then(async (response) => {
       if (!response.ok) {
-        // Check if the response has a body
-        const errorData = await response.text(); // Use text() to handle empty responses
-        let jsonData;
+        const errorData = await response.text();
         try {
-          jsonData = JSON.parse(errorData); // Attempt to parse JSON
+          const jsonData = JSON.parse(errorData);
+          throw new Error(jsonData?.message || 'Erreur lors de la suppression');
         } catch {
           throw new Error(errorData || 'Erreur lors de la suppression');
         }
-        throw new Error(jsonData.message || 'Erreur lors de la suppression');
       }
 
       // Update UI by filtering out the deleted file
       setFiles((prevFiles) => prevFiles.filter((file) => file.id !== inputFile.id));
 
       // console.log('✅ Document supprimé avec succès');
-    } catch (error) {
-      console.error('❌ Erreur de suppression:', error.message);
-    }
+      return 'Suppression effectuée!';
+    });
+
+    // Use toast.promise to handle loading, success, and error states
+    toast.promise(deletePromise, {
+      loading: 'En cours de suppression...',
+      success: 'Suppression effectuée!',
+      error: 'Erreur lors de la suppression!',
+    });
+
+    return deletePromise; // Ensure function execution waits for promise resolution
   };
-  // console.log(files);
+  
+
   return (
     <>
       <DashboardContent>
@@ -116,30 +135,7 @@ export default function DepotDetailsView({ id }) {
         >
           {files.length > 0 &&
             files.map((file, index) => (
-              <Card
-                key={index}
-                sx={{
-                  p: 3,
-                  height: 250,
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  flexDirection: 'column',
-                }}
-              >
-                <Typography>{file.original_name}</Typography>
-                <Typography variant="caption">{fDate(file.updated_at)}</Typography>
-                <Box gap={2}>
-                  {/* <TextField label="Nom de fichier" fullWidth /> */}
-                  <Button
-                    sx={{ mt: 2 }}
-                    variant="contained"
-                    color="error"
-                    onClick={() => handleRemoveFile(file)}
-                  >
-                    Supprimer
-                  </Button>
-                </Box>
-              </Card>
+              <DepotDetailsRow file={file} onRemove={()=>handleRemoveFile(file)}/>
             ))}
           <Card sx={{ height: 250 }}>
             <UploadBox
@@ -168,30 +164,7 @@ export default function DepotDetailsView({ id }) {
         </Box>
       </DashboardContent>
 
-      <Dialog open={open.value} onClose={open.onFalse}>
-        <DialogTitle>Vérifier votre information générale</DialogTitle>
-        <DialogContent>
-          <Box p={2} flexDirection="column" display="flex">
-            <DatePicker label="Date de déménagement" sx={{ mb: 2.5 }} />
-            <TextField label="Résidence actuelle" sx={{ mb: 2.5 }} />
-            <FormControl>
-              <InputLabel htmlFor="depot-situation-familiale">Situation familiale</InputLabel>
-              <Select
-                inputProps={{ id: 'depot-situation-familiale' }}
-                label="Situation familiale"
-                input={<OutlinedInput label="Situation familiale" />}
-              >
-                <MenuItem value="Celebataire">Célébataire</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="contained" color="primary">
-            Enregistrer
-          </Button>
-        </DialogActions>
-      </Dialog>
+      
     </>
   );
 }

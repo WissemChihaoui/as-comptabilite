@@ -31,7 +31,7 @@ export function usePutRecords() {
     const date = fDate(demenagement);
     try {
       const url = 'http://127.0.0.1:8000/api/user/profile'; // Use correct API path
-      const params = { date, adresse, situation };
+      const params = { demenagement, adresse, situation };
 
       // console.log("Updating records with:", params);
 

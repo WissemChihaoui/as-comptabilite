@@ -74,21 +74,7 @@ export function FileManagerTable({
               dataFiltered.map((row) => row.id)
             )
           }
-          action={
-            <>
-              <Tooltip title="Share">
-                <IconButton color="primary">
-                  <Iconify icon="solar:share-bold" />
-                </IconButton>
-              </Tooltip>
-
-              <Tooltip title="Delete">
-                <IconButton color="primary" onClick={onOpenConfirm}>
-                  <Iconify icon="solar:trash-bin-trash-bold" />
-                </IconButton>
-              </Tooltip>
-            </>
-          }
+         
           sx={{
             pl: 1,
             pr: 2,

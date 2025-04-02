@@ -1,177 +1,152 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 
 import Stack from '@mui/material/Stack';
 
 import { useBoolean } from 'src/hooks/use-boolean';
-import { useSetState } from 'src/hooks/use-set-state';
-
-import { fIsAfter, fIsBetween } from 'src/utils/format-time';
-
-import { FILE_TYPE_OPTIONS } from 'src/_mock';
-
-import { toast } from 'src/components/snackbar';
-import { fileFormat } from 'src/components/file-thumbnail';
 import { EmptyContent } from 'src/components/empty-content';
-import { useTable, rowInPage, getComparator } from 'src/components/table';
+import { useTable } from 'src/components/table';
 import { DatePicker } from '@mui/x-date-pickers';
 import {
-  Box,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Divider,
-  FormControl,
   InputLabel,
   MenuItem,
-  OutlinedInput,
   Select,
   TextField,
   Typography,
 } from '@mui/material';
 import { usePutRecords } from 'src/actions/user';
+import { toast } from 'sonner';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useMockedUser } from 'src/auth/hooks';
-
-import { FileManagerFiltersResult } from '../file-manager-filters-result';
+import { STORAGE_KEY } from 'src/auth/context/jwt';
+import axios from 'axios';
 import { FileManagerGridView } from '../file-manager-grid-view';
 
 // ----------------------------------------------------------------------
 
-export function FileManagerView({ folders }) {
+export function FileManagerView({ folders, setServiceStatus, status }) {
   const { user } = useMockedUser();
   const { updateRecords } = usePutRecords();
-  
-    const [demenagement, setDemenagement] = useState(user.demenagement);
-    const [adresse, setAdresse] = useState(user.adresse)
-    const [situation, setSituation] = useState(user.situation)
+
+  const canEdit = status === 'pending' || status === 'none' || status === 'rejected'
+
+  const [demenagement, setDemenagement] = useState(user.demenagement);
+  const [adresse, setAdresse] = useState(user.adresse);
+  const [situation, setSituation] = useState(user.situation);
 
   const table = useTable({ defaultRowsPerPage: 10 });
 
   const confirm = useBoolean();
 
-  const [tableData, setTableData] = useState(folders);
-
-  const filters = useSetState({
-    name: '',
-    type: [],
-    startDate: null,
-    endDate: null,
-  });
-
-  const dateError = fIsAfter(filters.state.startDate, filters.state.endDate);
-
-  const dataFiltered = applyFilter({
-    inputData: tableData,
-    comparator: getComparator(table.order, table.orderBy),
-    filters: filters.state,
-    dateError,
-  });
-
-  const dataInPage = rowInPage(dataFiltered, table.page, table.rowsPerPage);
-
-  const canReset =
-    !!filters.state.name ||
-    filters.state.type.length > 0 ||
-    (!!filters.state.startDate && !!filters.state.endDate);
-
-  const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
-
-  const handleDeleteItem = useCallback(
-    (id) => {
-      const deleteRow = tableData.filter((row) => row.id !== id);
-
-      toast.success('Delete success!');
-
-      setTableData(deleteRow);
-
-      table.onUpdatePageDeleteRow(dataInPage.length);
-    },
-    [dataInPage.length, table, tableData]
-  );
-
-  const renderResults = (
-    <FileManagerFiltersResult
-      filters={filters}
-      totalResults={dataFiltered.length}
-      onResetPage={table.onResetPage}
-    />
-  );
-
+  const notFound = !folders.length;
 
   const SubmitData = async (e) => {
     e.preventDefault();
-    try {
-        await updateRecords({ demenagement, adresse, situation });
-        alert('Profile updated successfully!');
-    } catch (error) {
-        alert('Failed to update profile');
+    toast.promise(updateRecords({ demenagement, adresse, situation }), {
+      loading: 'Mise à jour en cours...',
+      success: 'Profil mis à jour avec succès!',
+      error: 'Échec de la mise à jour du profil!',
+    });
+  };
+
+  const SubmitFiles = async (e) => {
+    e.preventDefault();
+
+    if (demenagement && adresse && situation) {
+      try {
+        const response = await axios.post(`http://127.0.0.1:8000/api/form/4`, {}, {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem(STORAGE_KEY)}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        // console.log('Response:', response.data);
+
+        // Handle the response status
+        switch (response.data.status) {
+          case 'form_not_found':
+            toast.info('Remplissez les documents nécessaires.');
+            break;
+          case 'submitted_for_review':
+            toast.success('Formulaire soumis pour révision.');
+            setServiceStatus({ value: 'review', label: 'En attente', color: 'warning' }); // Update the status
+            break;
+          case 'form_in_review':
+            toast.warning('Le formulaire est déjà en révision.');
+            break;
+          case 'form_accepted':
+            toast.success('Formulaire accepté.');
+            setServiceStatus({ value: 'accepted', label: 'Accepté', color: 'success' }); // Update the status
+            break;
+          default:
+            toast.error('Erreur inattendue.');
+            break;
+        }
+      } catch (error) {
+        console.error("Erreur lors de l'envoi du formulaire:", error);
+        toast.error("Échec de l'envoi du formulaire. Veuillez réessayer.");
+      }
+    } else {
+      toast.info('Complétez vos informations!');
     }
-};
+  };
 
   return (
     <>
-      <Stack spacing={2.5} >
-        {canReset && renderResults}
-      </Stack>
-      <Typography mb={2} variant="h6">Information générale</Typography>
+      <Typography mb={2} variant="h6">
+        Information générale
+      </Typography>
       <Grid container spacing={2}>
         <Grid xs={12} md={4}>
           <InputLabel mb={1}>Date de déménagement</InputLabel>
-          <DatePicker sx={{ width: '100%'}} value={demenagement}  onChange={(newValue) => {
-            setDemenagement(newValue);
-          }}/>
+          <DatePicker
+            sx={{ width: '100%' }}
+            value={demenagement}
+            onChange={(newValue) => {
+              setDemenagement(newValue);
+            }}
+            disabled={!canEdit}
+          />
         </Grid>
         <Grid xs={12} md={4}>
           <InputLabel mb={1}>Résidence actuelle</InputLabel>
-          <TextField fullWidth value={adresse} onChange={(e)=>setAdresse(e.target.value)}/>
+          <TextField fullWidth value={adresse} onChange={(e) => setAdresse(e.target.value)} disabled={!canEdit}/>
         </Grid>
         <Grid xs={12} md={4}>
           <InputLabel mb={1}>Situation familiale</InputLabel>
-          <Select fullWidth value={situation} onChange={(e)=>setSituation(e.target.value)}>
+          <Select fullWidth value={situation} onChange={(e) => setSituation(e.target.value)} disabled={!canEdit}>
             <MenuItem value="Célébataire">Célébataire</MenuItem>
           </Select>
         </Grid>
       </Grid>
       <Stack py={2} alignItems="flex-end">
-        <Button variant='contained' color='primary' onClick={(e)=>SubmitData(e)}>Valider</Button>
+        <Button variant="contained" color="primary" onClick={(e) => SubmitData(e)}>
+          Valider
+        </Button>
       </Stack>
       <Divider sx={{ my: 1, borderStyle: 'dashed' }} />
-      <Typography mb={2} variant="h6">Documents à fournir</Typography>
+      <Typography mb={2} variant="h6">
+        Documents à fournir
+      </Typography>
       {notFound ? (
         <EmptyContent filled sx={{ py: 10 }} />
       ) : (
-        <>
-          <FileManagerGridView
-            table={table}
-            dataFiltered={dataFiltered}
-            onDeleteRow={handleDeleteItem}
-            notFound={notFound}
-            onOpenConfirm={confirm.onTrue}
-          />
-        </>
+        <FileManagerGridView
+          table={table}
+          dataFiltered={folders}
+          notFound={notFound}
+          onOpenConfirm={confirm.onTrue}
+          canEdit={canEdit}
+        />
       )}
       <Stack my={2} alignItems="flex-start">
-        <Button variant='contained' color='primary'>Envoyer ma demande</Button>
+        <Button variant="contained" color="primary" onClick={(e) => SubmitFiles(e)}>
+          Envoyer ma demande
+        </Button>
       </Stack>
     </>
   );
 }
 
-function applyFilter({ inputData, comparator, filters }) {
-  const { name } = filters;
-  const stabilizedThis = inputData.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  inputData = stabilizedThis.map((el) => el[0]);
-  if (name) {
-    inputData = inputData.filter(
-      (file) => file.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
-    );
-  }
-  return inputData;
-}
