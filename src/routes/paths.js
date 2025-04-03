@@ -2,6 +2,7 @@
 
 const ROOTS = {
   AUTH: '/auth',
+  ADMIN: '/admin',
   DASHBOARD: '/dashboard',
 };
 
@@ -55,4 +56,7 @@ export const paths = {
       six: `${ROOTS.DASHBOARD}/group/six`,
     },
   },
+  admin: {
+    root: ROOTS.ADMIN,
+  }
 };
