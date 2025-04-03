@@ -64,7 +64,7 @@ export default function DemandePageView({ data, loading }) {
           sx={{ mb: { xs: 3, md: 5 } }}
           action={<Label color={serviceStatus.color}>{serviceStatus.label}</Label>} // ✅ Dynamic status
         />
-        {loading ? renderLoading : <FileManagerView files={data} />}
+        {loading ? renderLoading : <FileManagerView files={data} setServiceStatus={setServiceStatus} serviceId={1}/>}
       </DashboardContent>
     </>
   );

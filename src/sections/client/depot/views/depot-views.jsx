@@ -14,9 +14,6 @@ import { FileManagerView } from '../../file-manager/view';
 export default function DepotView({ data, loading }) {
   const renderLoading = <ProductItemSkeleton />;
 
-  // 🏆 Optimize status data with useMemo
-  
-
   const [serviceStatus, setServiceStatus] = useState({
     value: 'loading',
     label: 'Chargement...',
@@ -33,22 +30,20 @@ export default function DepotView({ data, loading }) {
           },
         });
 
-        // console.log('Response:', response.data);
-
-        const fetchedStatus = response.data.status || 'none'; // Default to 'none' if no status found
+        const fetchedStatus = response.data.status || 'none';
 
         const selectedStatus =
-          statusData.find((status) => status.value === fetchedStatus) || statusData[0]; // Default to "Pas demandé"
+          statusData.find((status) => status.value === fetchedStatus) || statusData[0];
 
         setServiceStatus(selectedStatus);
       } catch (error) {
         console.error('Erreur lors de la récupération du statut:', error);
-        setServiceStatus(statusData[0]); // Set to "Pas demandé" on error
+        setServiceStatus(statusData[0]);
       }
     };
 
     fetchServiceStatus();
-  }, [data]); // ✅ Depend on statusData to prevent stale closure issues
+  }, [data]);
 
   return (
     <>

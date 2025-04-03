@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -10,7 +10,6 @@ import TableRow, { tableRowClasses } from '@mui/material/TableRow';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 
 import { useBoolean } from 'src/hooks/use-boolean';
-import { useDoubleClick } from 'src/hooks/use-double-click';
 
 import { fDate, fTime } from 'src/utils/format-time';
 
@@ -21,8 +20,6 @@ import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { FileThumbnail } from 'src/components/file-thumbnail';
 import { dropFiles } from 'src/actions/documents';
-import { Upload } from 'src/components/upload';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import axios from 'axios';
 import { STORAGE_KEY } from 'src/auth/context/jwt';
 
@@ -32,26 +29,12 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
   const theme = useTheme();
 
   const [file, setFile] = useState([]);
-
-  // console.log('file',file)
-
-  const openUpload = useBoolean();
+  const fileInputRef = useRef(null);
 
   const details = useBoolean();
 
   const confirm = useBoolean();
 
-  const handleClick = useDoubleClick({
-    click: () => {
-      openUpload.onTrue();
-    },
-    doubleClick: () => console.info('DOUBLE CLICK'),
-  });
-
-  const handleDrop = useCallback((acceptedFiles) => {
-    const newFile = acceptedFiles[0];
-    setFile(newFile);
-  }, []);
   const fetchDocumentDetails = useCallback(async () => {
     try {
       const response = await axios.get(`http://127.0.0.1:8000/api/documents/${row.id}`, {
@@ -59,36 +42,19 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
           Authorization: `Bearer ${sessionStorage.getItem(STORAGE_KEY)}`,
         },
       });
-      setFile(response.data); // Set the fetched document details
+      setFile(response.data);
     } catch (err) {
       console.error(err);
+      setFile({});
     }
-  }, [row.id]); // Dependencies to re-create the function if row.id changes
-  
+  }, [row.id]);
+
   useEffect(() => {
     if (row.id) {
       fetchDocumentDetails();
     }
-  }, [row.id,fetchDocumentDetails]);
+  }, [row.id, fetchDocumentDetails]);
 
-  // console.log(file)
-
-  const handleSubmit = async () => {
-    if (!file || file.length === 0) {
-      console.error('No file selected');
-      return;
-    }
-
-    try {
-      const response = await dropFiles([file], row.service_id, row.id); // Calling dropFiles for a single file
-      // console.log("✅ Upload Successful:", response);
-      toast.success('Succès du téléchargement')
-      openUpload.onFalse(); // Close dialog or reset any relevant state
-      fetchDocumentDetails();
-    } catch (error) {
-      toast.error('Erreur de téléchargement');
-    }
-  };
   const defaultStyles = {
     borderTop: `solid 1px ${varAlpha(theme.vars.palette.grey['500Channel'], 0.16)}`,
     borderBottom: `solid 1px ${varAlpha(theme.vars.palette.grey['500Channel'], 0.16)}`,
@@ -105,26 +71,69 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
   };
 
   const deleteFile = async () => {
+    confirm.onFalse();
+    const deletePromise = fetch(`http://127.0.0.1:8000/api/documents/${file.id}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem(STORAGE_KEY)}`,
+        'Content-Type': 'application/json',
+      },
+    }).then(async (response) => {
+      if (!response.ok) {
+        const errorData = await response.text();
+        try {
+          const jsonData = JSON.parse(errorData);
+          throw new Error(jsonData?.message || 'Erreur lors de la suppression');
+        } catch {
+          throw new Error(errorData || 'Erreur lors de la suppression');
+        }
+      }
+
+      setFile([]);
+      return 'Suppression effectuée!';
+    });
+
+    toast.promise(deletePromise, {
+      loading: 'En cours de suppression...',
+      success: 'Suppression effectuée!',
+      error: 'Erreur lors de la suppression!',
+    });
+
+    return deletePromise;
+  };
+
+  const handleRowClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = async (event) => {
+    const selectedFile = event.target.files[0];
+    if (!selectedFile) return;
+
+    const uploadPromise = dropFiles([selectedFile], row.service_id, row.id);
+
+    toast.promise(uploadPromise, {
+      loading: 'Téléchargement en cours...',
+      success: 'Succès du téléchargement',
+      error: 'Erreur de téléchargement',
+    });
+
     try {
-      await axios.delete(`http://127.0.0.1:8000/api/documents/${file.id}`, {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem(STORAGE_KEY)}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      // Execute the parent callback for deleting the document from the state
-
-      setFile({});
-      confirm.onFalse();
-      toast.info('Document deleted successfully.');
+      await uploadPromise;
+      fetchDocumentDetails();
     } catch (error) {
-      toast.info('Failed to delete document.');
       console.error(error);
     }
   };
+
   return (
     <>
+      <input
+        type="file"
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+      />
       <TableRow
         selected={selected}
         sx={{
@@ -141,7 +150,7 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
           ...(details.value && { [`& .${tableCellClasses.root}`]: { ...defaultStyles } }),
         }}
       >
-        <TableCell onClick={handleClick}>
+        <TableCell onClick={handleRowClick}>
           <Stack direction="row" alignItems="center" spacing={2}>
             <FileThumbnail file={`${file.original_name?.split('.').pop()}` || 'pdf'} />
 
@@ -164,11 +173,11 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
           </Stack>
         </TableCell>
 
-        <TableCell onClick={handleClick} sx={{ whiteSpace: 'nowrap' }}>
+        <TableCell onClick={handleRowClick} sx={{ whiteSpace: 'nowrap' }}>
           {file.original_name?.split('.').pop()}
         </TableCell>
 
-        <TableCell onClick={handleClick} sx={{ whiteSpace: 'nowrap' }}>
+        <TableCell onClick={handleRowClick} sx={{ whiteSpace: 'nowrap' }}>
           <ListItemText
             primary={fDate(file.created_at)}
             secondary={fTime(file.created_at)}
@@ -178,14 +187,13 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
         </TableCell>
 
         <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-          
-          <IconButton color='error' onClick={()=>confirm.onTrue()}>
-            <Iconify icon="tabler:trash" />
-          </IconButton>
+          {file?.id ? (
+            <IconButton color="error" onClick={() => confirm.onTrue()}>
+              <Iconify icon="tabler:trash" />
+            </IconButton>
+          ) : null}
         </TableCell>
       </TableRow>
-
-      
 
       <ConfirmDialog
         open={confirm.value}
@@ -198,29 +206,6 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
           </Button>
         }
       />
-
-      <Dialog open={openUpload.value} onClose={openUpload.onFalse}>
-        <DialogTitle>Ajouter un fichier à {row.name}</DialogTitle>
-        <DialogContent>
-          <Upload
-            onDrop={handleDrop}
-            // value={file}
-            placeholder={
-              <Stack spacing={0.5} alignItems="center">
-                <Iconify icon="eva:cloud-upload-fill" width={40} />
-                <Typography variant="body2">Upload file</Typography>
-              </Stack>
-            }
-            sx={{ mb: 3, py: 2.5, flexGrow: 1, height: 'auto' }}
-          />
-        </DialogContent>
-
-        <DialogActions>
-          <Button onClick={() => handleSubmit()} variant="contained">
-            Enregistrer
-          </Button>
-        </DialogActions>
-      </Dialog>
     </>
   );
 }

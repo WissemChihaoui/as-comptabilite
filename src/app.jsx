@@ -27,7 +27,7 @@ export default function App() {
         <SettingsProvider settings={defaultSettings}>
           <ThemeProvider>
             <MotionLazy>
-            <Snackbar />
+              <Snackbar />
               <ProgressBar />
               <SettingsDrawer />
               <Router />

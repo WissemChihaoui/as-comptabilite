@@ -8,6 +8,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import { _contacts, _notifications } from 'src/_mock';
 
 import { Logo } from 'src/components/logo';
+import { useGetNotifications } from 'src/actions/notifications';
 import { useSettingsContext } from 'src/components/settings';
 
 import { Main } from './main';
@@ -34,6 +35,7 @@ import { NotificationsDrawer } from '../components/notifications-drawer';
 
 export function DashboardLayout({ sx, children, header, data }) {
   const theme = useTheme();
+
 
   const mobileNavOpen = useBoolean();
 
@@ -151,7 +153,7 @@ export function DashboardLayout({ sx, children, header, data }) {
                   ]}
                 /> */}
                 {/* -- Notifications popover -- */}
-                <NotificationsDrawer data={_notifications} />
+                <NotificationsDrawer />
                 {/* -- Settings button -- */}
                 <SettingsButton />
                 {/* -- Account drawer -- */}

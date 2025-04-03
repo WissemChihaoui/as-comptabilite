@@ -15,14 +15,16 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useMockedUser } from 'src/auth/hooks';
 import { useTable, rowInPage, getComparator } from 'src/components/table';
+import axios from 'axios';
 import { usePutRecords } from 'src/actions/user';
+import { STORAGE_KEY } from 'src/auth/context/jwt';
 
 import { FileManagerTable } from '../file-manager-table';
 import { FileManagerNewFolderDialog } from '../file-manager-new-folder-dialog';
 
 // ----------------------------------------------------------------------
 
-export function FileManagerView({ files }) {
+export function FileManagerView({ files, setServiceStatus, serviceId }) {
   const { user } = useMockedUser();
 
   const { updateMatricule } = usePutRecords();
@@ -36,8 +38,6 @@ export function FileManagerView({ files }) {
   const upload = useBoolean();
 
   const [tableData, setTableData] = useState(files);
-
-  // console.log(tableData)
 
   const filters = useSetState({
     name: '',
@@ -99,6 +99,49 @@ export function FileManagerView({ files }) {
     });
   };
 
+  const SubmitFiles = async (e) => {
+      e.preventDefault();
+  
+      if (matricule) {
+        try {
+          const response = await axios.post(`http://127.0.0.1:8000/api/form/${serviceId}`, {}, {
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem(STORAGE_KEY)}`,
+              'Content-Type': 'application/json',
+            },
+          });
+  
+          // console.log('Response:', response.data);
+  
+          // Handle the response status
+          switch (response.data.status) {
+            case 'form_not_found':
+              toast.info('Remplissez les documents nécessaires.');
+              break;
+            case 'submitted_for_review':
+              toast.success('Formulaire soumis pour révision.');
+              setServiceStatus({ value: 'review', label: 'En attente', color: 'warning' }); // Update the status
+              break;
+            case 'form_in_review':
+              toast.warning('Le formulaire est déjà en révision.');
+              break;
+            case 'form_accepted':
+              toast.success('Formulaire accepté.');
+              setServiceStatus({ value: 'accepted', label: 'Accepté', color: 'success' }); // Update the status
+              break;
+            default:
+              toast.error('Erreur inattendue.');
+              break;
+          }
+        } catch (error) {
+          console.error("Erreur lors de l'envoi du formulaire:", error);
+          toast.error("Échec de l'envoi du formulaire. Veuillez réessayer.");
+        }
+      } else {
+        toast.info('Complétez vos informations!');
+      }
+    };
+
   return (
     <>
       <Typography mb={2} variant="h6">
@@ -128,9 +171,9 @@ export function FileManagerView({ files }) {
         />
       )}
 
-      <FileManagerNewFolderDialog open={upload.value} onClose={upload.onFalse} />
+      
       <Stack my={2} alignItems="flex-start">
-        <Button variant="contained" color="primary">
+        <Button variant="contained" color="primary" onClick={(e) => SubmitFiles(e)}>
           Envoyer ma demande
         </Button>
       </Stack>

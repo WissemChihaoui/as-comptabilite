@@ -44,32 +44,32 @@ export function Upload({
 
   const hasError = isDragReject || !!error;
 
-  // const renderMultiPreview = hasFiles && (
-  //   <>
-  //     {/* <MultiFilePreview files={value} thumbnail={thumbnail} onRemove={onRemove} sx={{ my: 3 }} /> */}
+  const renderMultiPreview = hasFiles && (
+    <>
+      <MultiFilePreview files={value} thumbnail={thumbnail} onRemove={onRemove} sx={{ my: 3 }} />
 
-  //     {(onRemoveAll || onUpload) && (
-  //       <Box gap={1.5} display="flex" justifyContent="flex-end">
-  //         {onRemoveAll && (
-  //           <Button color="inherit" variant="outlined" size="small" onClick={onRemoveAll}>
-  //             Remove all
-  //           </Button>
-  //         )}
+      {(onRemoveAll || onUpload) && (
+        <Box gap={1.5} display="flex" justifyContent="flex-end">
+          {onRemoveAll && (
+            <Button color="inherit" variant="outlined" size="small" onClick={onRemoveAll}>
+              Remove all
+            </Button>
+          )}
 
-  //         {onUpload && (
-  //           <Button
-  //             size="small"
-  //             variant="contained"
-  //             onClick={onUpload}
-  //             startIcon={<Iconify icon="eva:cloud-upload-fill" />}
-  //           >
-  //             Upload
-  //           </Button>
-  //         )}
-  //       </Box>
-  //     )}
-  //   </>
-  // );
+          {onUpload && (
+            <Button
+              size="small"
+              variant="contained"
+              onClick={onUpload}
+              startIcon={<Iconify icon="eva:cloud-upload-fill" />}
+            >
+              Upload
+            </Button>
+          )}
+        </Box>
+      )}
+    </>
+  );
 
   return (
     <Box
@@ -117,7 +117,7 @@ export function Upload({
       <RejectionFiles files={fileRejections} />
 
       {/* Multi files */}
-      {/* {renderMultiPreview} */}
+      {renderMultiPreview}
     </Box>
   );
 }

@@ -1,12 +1,10 @@
 import { m } from 'framer-motion';
-import { useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 
-import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Badge from '@mui/material/Badge';
 import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
 import SvgIcon from '@mui/material/SvgIcon';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
@@ -18,36 +16,43 @@ import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { varHover } from 'src/components/animate';
 import { Scrollbar } from 'src/components/scrollbar';
+import { handleAllRead, handleRead, useGetNotifications } from 'src/actions/notifications';
 import { CustomTabs } from 'src/components/custom-tabs';
 
 import { NotificationItem } from './notification-item';
 
 // ----------------------------------------------------------------------
 
-const TABS = [
-  { value: 'all', label: 'All', count: 22 },
-  { value: 'unread', label: 'Unread', count: 12 },
-  { value: 'archived', label: 'Archived', count: 10 },
-];
-
-// ----------------------------------------------------------------------
-
-export function NotificationsDrawer({ data = [], sx, ...other }) {
+export function NotificationsDrawer({ sx, ...other }) {
   const drawer = useBoolean();
+    const {notificationsData, notificationsLoading} = useGetNotifications();
 
-  const [currentTab, setCurrentTab] = useState('all');
+    const [notifications, setNotifications] = useState([]);
+  
+    useEffect(() => {
+      if (notificationsData) {
+        setNotifications(notificationsData);
+      }
+    }, [notificationsData]);
 
-  const handleChangeTab = useCallback((event, newValue) => {
-    setCurrentTab(newValue);
-  }, []);
+  console.log('notifications', notifications) //  showing undefined
 
-  const [notifications, setNotifications] = useState(data);
-
-  const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
+  const totalUnRead = notifications?.filter((item) => item.isUnRead === 1).length;
 
   const handleMarkAllAsRead = () => {
+    handleAllRead()
     setNotifications(notifications.map((notification) => ({ ...notification, isUnRead: false })));
   };
+
+  const handleMark = (id) => {
+    handleRead(id);
+    setNotifications(
+      notifications.map((notification) =>
+        notification.id === id ? { ...notification, isUnRead: false } : notification
+      )
+    );
+  };
+  
 
   const renderHead = (
     <Stack direction="row" alignItems="center" sx={{ py: 2, pl: 2.5, pr: 1, minHeight: 68 }}>
@@ -56,7 +61,7 @@ export function NotificationsDrawer({ data = [], sx, ...other }) {
       </Typography>
 
       {!!totalUnRead && (
-        <Tooltip title="Mark all as read">
+        <Tooltip title="Marquer tous comme lus">
           <IconButton color="primary" onClick={handleMarkAllAsRead}>
             <Iconify icon="eva:done-all-fill" />
           </IconButton>
@@ -66,44 +71,17 @@ export function NotificationsDrawer({ data = [], sx, ...other }) {
       <IconButton onClick={drawer.onFalse} sx={{ display: { xs: 'inline-flex', sm: 'none' } }}>
         <Iconify icon="mingcute:close-line" />
       </IconButton>
-
-      <IconButton>
-        <Iconify icon="solar:settings-bold-duotone" />
-      </IconButton>
     </Stack>
   );
 
-  const renderTabs = (
-    <CustomTabs variant="fullWidth" value={currentTab} onChange={handleChangeTab}>
-      {TABS.map((tab) => (
-        <Tab
-          key={tab.value}
-          iconPosition="end"
-          value={tab.value}
-          label={tab.label}
-          icon={
-            <Label
-              variant={((tab.value === 'all' || tab.value === currentTab) && 'filled') || 'soft'}
-              color={
-                (tab.value === 'unread' && 'info') ||
-                (tab.value === 'archived' && 'success') ||
-                'default'
-              }
-            >
-              {tab.count}
-            </Label>
-          }
-        />
-      ))}
-    </CustomTabs>
-  );
+  
 
   const renderList = (
     <Scrollbar>
       <Box component="ul">
         {notifications?.map((notification) => (
           <Box component="li" key={notification.id} sx={{ display: 'flex' }}>
-            <NotificationItem notification={notification} />
+            <NotificationItem notification={notification} handleMark={() => handleMark(notification.id)}/>
           </Box>
         ))}
       </Box>
@@ -146,16 +124,9 @@ export function NotificationsDrawer({ data = [], sx, ...other }) {
       >
         {renderHead}
 
-        {renderTabs}
-
         {renderList}
-
-        <Box sx={{ p: 1 }}>
-          <Button fullWidth size="large">
-            View all
-          </Button>
-        </Box>
       </Drawer>
+      
     </>
   );
 }
