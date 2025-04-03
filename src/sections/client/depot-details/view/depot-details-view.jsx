@@ -1,32 +1,23 @@
+import { toast } from 'sonner';
+import React, { useState, useEffect, useCallback } from 'react';
+
 import {
   Box,
-  Button,
   Card,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  OutlinedInput,
-  Select,
-  TextField,
   Typography,
 } from '@mui/material';
+
 import { paths } from 'src/routes/paths';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import React, { useCallback, useEffect, useState } from 'react';
-import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
-import { Iconify } from 'src/components/iconify';
-import { UploadBox } from 'src/components/upload';
-import { useBoolean } from 'src/hooks/use-boolean';
+
 import { DashboardContent } from 'src/layouts/dashboard';
 import { dropFiles, fetchDocuments } from 'src/actions/documents';
-import { fDate, today } from 'src/utils/format-time';
+
+import { Iconify } from 'src/components/iconify';
+import { UploadBox } from 'src/components/upload';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
+
 import { STORAGE_KEY } from 'src/auth/context/jwt';
-import { toast } from 'sonner';
-import { ConfirmDialog } from 'src/components/custom-dialog';
+
 import DepotDetailsRow from '../depot-details-row';
 
 export default function DepotDetailsView({ id }) {
@@ -108,8 +99,7 @@ export default function DepotDetailsView({ id }) {
   
 
   return (
-    <>
-      <DashboardContent>
+    <DashboardContent>
         <CustomBreadcrumbs
           heading="Dépot"
           links={[
@@ -134,7 +124,7 @@ export default function DepotDetailsView({ id }) {
           gap={3}
         >
           {files.length > 0 &&
-            files.map((file, index) => (
+            files.map((file) => (
               <DepotDetailsRow file={file} onRemove={()=>handleRemoveFile(file)}/>
             ))}
           <Card sx={{ height: 250 }}>
@@ -163,8 +153,5 @@ export default function DepotDetailsView({ id }) {
           </Card>
         </Box>
       </DashboardContent>
-
-      
-    </>
   );
 }

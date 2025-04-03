@@ -1,4 +1,5 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import axios from 'axios';
+import { useRef, useState, useEffect, useCallback } from 'react';
 
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -14,18 +15,18 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import { fDate, fTime } from 'src/utils/format-time';
 
 import { varAlpha } from 'src/theme/styles';
+import { dropFiles } from 'src/actions/documents';
 
 import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { FileThumbnail } from 'src/components/file-thumbnail';
-import { dropFiles } from 'src/actions/documents';
-import axios from 'axios';
+
 import { STORAGE_KEY } from 'src/auth/context/jwt';
 
 // ----------------------------------------------------------------------
 
-export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow }) {
+export function FileManagerTableRow({ row, selected }) {
   const theme = useTheme();
 
   const [file, setFile] = useState([]);

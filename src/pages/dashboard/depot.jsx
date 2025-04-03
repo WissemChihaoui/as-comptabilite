@@ -1,7 +1,8 @@
 import { Helmet } from 'react-helmet-async';
-import { useGetDocuments } from 'src/actions/documents';
 
 import { CONFIG } from 'src/config-global';
+import { useGetDocuments } from 'src/actions/documents';
+
 import DepotView from 'src/sections/client/depot/views/depot-views';
 
 // ----------------------------------------------------------------------

@@ -1,13 +1,10 @@
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import Tooltip from '@mui/material/Tooltip';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
-import { RouterLink } from 'src/routes/components';
-
 import { CONFIG } from 'src/config-global';
 import { varAlpha, bgGradient } from 'src/theme/styles';
+
 import { Logo } from 'src/components/logo';
 
 // ----------------------------------------------------------------------
@@ -17,7 +14,6 @@ export function Section({
   method,
   layoutQuery,
   methods,
-  title = 'Manage the job',
   imgUrl = `${CONFIG.assetsDir}/assets/illustrations/illustration-dashboard.webp`,
   subtitle = 'Bienvenue sur votre espace de dépots de documents de ASCOMPTABILITE',
   ...other
@@ -53,9 +49,6 @@ export function Section({
       {...other}
     >
       <div>
-        {/* <Typography variant="h3" sx={{ textAlign: 'center' }}>
-          {title}
-        </Typography> */}
         <Box display="flex" justifyContent="center">
           <Logo isSingle={false} height={70}/>
         </Box>

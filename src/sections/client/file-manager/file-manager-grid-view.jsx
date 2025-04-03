@@ -1,18 +1,19 @@
+import { toast } from 'sonner';
 import { useRef, useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 
 import { useBoolean } from 'src/hooks/use-boolean';
+
 import { fetchDocuments } from 'src/actions/documents';
-import { toast } from 'sonner';
 
 import { FileManagerFolderItem } from './file-manager-folder-item';
 
 // ----------------------------------------------------------------------
 
 export function FileManagerGridView({ table, dataFiltered, canEdit }) {
-  const { selected, onSelectRow: onSelectItem, onSelectAllRows: onSelectAllItems } = table;
+  const { selected, onSelectRow: onSelectItem } = table;
 
   const [foldersWithFiles, setFoldersWithFiles] = useState([]);
 
@@ -46,8 +47,7 @@ export function FileManagerGridView({ table, dataFiltered, canEdit }) {
 
 
   return (
-    <>
-      <Box ref={containerRef}>
+    <Box ref={containerRef}>
         <Collapse in={!folders.value} unmountOnExit>
           <Box
             gap={3}
@@ -74,6 +74,5 @@ export function FileManagerGridView({ table, dataFiltered, canEdit }) {
           </Box>
         </Collapse>
       </Box>
-    </>
   );
 }

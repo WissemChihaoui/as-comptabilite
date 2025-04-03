@@ -1,16 +1,21 @@
-import { Button, MenuItem, MenuList, Stack } from '@mui/material';
+import React from 'react';
+
 import Grid from '@mui/material/Unstable_Grid2';
-import React, { useEffect, useState } from 'react';
-import { SeoIllustration } from 'src/assets/illustrations';
-import { useMockedUser } from 'src/auth/hooks';
+import { Stack, Button, MenuItem, MenuList } from '@mui/material';
+
 import { paths } from 'src/routes/paths';
-import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
-import axios from 'axios';
-import { Iconify } from 'src/components/iconify';
-import { RouterLink } from 'src/routes/components';
-import { CustomPopover, usePopover } from 'src/components/custom-popover';
 import { useRouter } from 'src/routes/hooks';
+import { RouterLink } from 'src/routes/components';
+
 import { DashboardContent } from 'src/layouts/dashboard';
+import { SeoIllustration } from 'src/assets/illustrations';
+
+import { Iconify } from 'src/components/iconify';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
+import { usePopover, CustomPopover } from 'src/components/custom-popover';
+
+import { useMockedUser } from 'src/auth/hooks';
+
 import { AppWelcome } from '../app-welcome';
 
 export default function HomePageView() {

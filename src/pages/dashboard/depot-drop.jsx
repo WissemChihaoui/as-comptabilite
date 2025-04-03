@@ -1,7 +1,9 @@
 import { Helmet } from 'react-helmet-async';
 
-import { CONFIG } from 'src/config-global';
 import { useParams } from 'src/routes/hooks';
+
+import { CONFIG } from 'src/config-global';
+
 import DepotDetailsView from 'src/sections/client/depot-details/view/depot-details-view';
 
 // ----------------------------------------------------------------------

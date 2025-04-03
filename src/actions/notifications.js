@@ -1,8 +1,10 @@
-import { useMemo } from 'react';
-import useSWR, { useSWRConfig } from 'swr';
-import { fetcher, endpoints } from 'src/utils/axios';
-import { STORAGE_KEY } from 'src/auth/context/jwt';
+import useSWR from 'swr';
 import axios from 'axios';
+import { useMemo } from 'react';
+
+import { fetcher, endpoints } from 'src/utils/axios';
+
+import { STORAGE_KEY } from 'src/auth/context/jwt';
 
 const swrOptions = {
   revalidateIfStale: false,

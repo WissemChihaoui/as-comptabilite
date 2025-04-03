@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
+
 import { _mock } from 'src/_mock';
 import { useGetUser } from 'src/actions/user';
-import { fDateTime } from 'src/utils/format-time';
 
 // To get the user from the <AuthContext/>, you can use
 

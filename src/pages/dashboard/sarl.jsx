@@ -1,7 +1,8 @@
 import { Helmet } from 'react-helmet-async';
-import { useGetDocuments } from 'src/actions/documents';
 
 import { CONFIG } from 'src/config-global';
+import { useGetDocuments } from 'src/actions/documents';
+
 import SarlPageView from 'src/sections/client/sarl/sarl-page-view';
 
 // ----------------------------------------------------------------------

@@ -1,16 +1,10 @@
-import { useState, useCallback } from 'react';
-
 import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
-import Checkbox from '@mui/material/Checkbox';
-import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import Autocomplete from '@mui/material/Autocomplete';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
@@ -21,7 +15,6 @@ import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { fileFormat, FileThumbnail } from 'src/components/file-thumbnail';
 
-import { FileManagerShareDialog } from './file-manager-share-dialog';
 import { FileManagerInvitedItem } from './file-manager-invited-item';
 
 // ----------------------------------------------------------------------
@@ -40,18 +33,11 @@ export function FileManagerFileDetails({
 
   const hasShared = shared && !!shared.length;
 
-  const toggleTags = useBoolean(true);
+
 
   const share = useBoolean();
 
   const properties = useBoolean(true);
-
-  const [inviteEmail, setInviteEmail] = useState('');
-
-
-  const handleChangeInvite = useCallback((event) => {
-    setInviteEmail(event.target.value);
-  }, []);
 
   const renderProperties = (
     <Stack spacing={1.5}>
@@ -128,8 +114,7 @@ export function FileManagerFileDetails({
   );
 
   return (
-    <>
-      <Drawer
+    <Drawer
         open={open}
         onClose={onClose}
         anchor="right"
@@ -184,6 +169,5 @@ export function FileManagerFileDetails({
           </Button>
         </Box>
       </Drawer>
-    </>
   );
 }

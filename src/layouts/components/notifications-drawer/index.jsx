@@ -1,5 +1,5 @@
 import { m } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -12,12 +12,11 @@ import IconButton from '@mui/material/IconButton';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import { Label } from 'src/components/label';
+import { handleRead, handleAllRead, useGetNotifications } from 'src/actions/notifications';
+
 import { Iconify } from 'src/components/iconify';
 import { varHover } from 'src/components/animate';
 import { Scrollbar } from 'src/components/scrollbar';
-import { handleAllRead, handleRead, useGetNotifications } from 'src/actions/notifications';
-import { CustomTabs } from 'src/components/custom-tabs';
 
 import { NotificationItem } from './notification-item';
 
@@ -25,7 +24,7 @@ import { NotificationItem } from './notification-item';
 
 export function NotificationsDrawer({ sx, ...other }) {
   const drawer = useBoolean();
-    const {notificationsData, notificationsLoading} = useGetNotifications();
+    const {notificationsData} = useGetNotifications();
 
     const [notifications, setNotifications] = useState([]);
   

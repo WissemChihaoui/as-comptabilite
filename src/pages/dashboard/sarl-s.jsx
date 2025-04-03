@@ -1,9 +1,8 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useGetDocuments } from 'src/actions/documents';
 
 import { CONFIG } from 'src/config-global';
+import { useGetDocuments } from 'src/actions/documents';
+
 import SarlssViewPage from 'src/sections/client/sarl-s/sarlss-view-page';
 
 // ----------------------------------------------------------------------

@@ -1,13 +1,15 @@
 import React from 'react';
+
 import { paths } from 'src/routes/paths';
-import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
-import { Iconify } from 'src/components/iconify';
+
 import { DashboardContent } from 'src/layouts/dashboard';
+
+import { Iconify } from 'src/components/iconify';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
 export default function DepotPageView() {
   return (
-    <>
-      <DashboardContent>
+    <DashboardContent>
         <CustomBreadcrumbs
           heading="Déclaration d’impôt"
           links={[
@@ -24,6 +26,5 @@ export default function DepotPageView() {
           sx={{ mb: { xs: 3, md: 5 } }}
         />
       </DashboardContent>
-    </>
   );
 }

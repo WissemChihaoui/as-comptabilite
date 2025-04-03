@@ -1,17 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
-import { Iconify } from 'src/components/iconify';
-import { paths } from 'src/routes/paths';
-import { DashboardContent } from 'src/layouts/dashboard';
-import { ProductItemSkeleton } from 'src/components/skeleton/product-skeleton';
-import { useMockedUser } from 'src/auth/hooks';
-import { Label } from 'src/components/label';
-import { statusData } from 'src/_mock/_status';
-import { STORAGE_KEY } from 'src/auth/context/jwt';
 import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+
+import { paths } from 'src/routes/paths';
+
+import { statusData } from 'src/_mock/_status';
+import { DashboardContent } from 'src/layouts/dashboard';
+
+import { Label } from 'src/components/label';
+import { Iconify } from 'src/components/iconify';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
+import { ProductItemSkeleton } from 'src/components/skeleton/product-skeleton';
+
+import { STORAGE_KEY } from 'src/auth/context/jwt';
+
 import { FileManagerView } from '../single-files/view';
 
-export default function SarlssViewPage({ data, loading, form_id }) {
+export default function SarlssViewPage({ data, loading }) {
   const renderLoading = <ProductItemSkeleton />;
 
   const [serviceStatus, setServiceStatus] = useState({
@@ -46,8 +50,7 @@ export default function SarlssViewPage({ data, loading, form_id }) {
       }, [data]);
 
   return (
-    <>
-      <DashboardContent>
+    <DashboardContent>
         <CustomBreadcrumbs
           heading="Constitution d'entreprise SARL-S"
           links={[
@@ -66,6 +69,5 @@ export default function SarlssViewPage({ data, loading, form_id }) {
         />
         {loading ? renderLoading : <FileManagerView files={data} setServiceStatus={setServiceStatus} serviceId={3}/>}
       </DashboardContent>
-    </>
   );
 }

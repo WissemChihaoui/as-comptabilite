@@ -1,13 +1,17 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
-import { Iconify } from 'src/components/iconify';
-import { DashboardContent } from 'src/layouts/dashboard';
-import { paths } from 'src/routes/paths';
-import { ProductItemSkeleton } from 'src/components/skeleton/product-skeleton';
-import { Label } from 'src/components/label';
-import { STORAGE_KEY } from 'src/auth/context/jwt';
 import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+
+import { paths } from 'src/routes/paths';
+
 import { statusData } from 'src/_mock/_status';
+import { DashboardContent } from 'src/layouts/dashboard';
+
+import { Label } from 'src/components/label';
+import { Iconify } from 'src/components/iconify';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
+import { ProductItemSkeleton } from 'src/components/skeleton/product-skeleton';
+
+import { STORAGE_KEY } from 'src/auth/context/jwt';
 
 import { FileManagerView } from '../../file-manager/view';
 
@@ -46,8 +50,7 @@ export default function DepotView({ data, loading }) {
   }, [data]);
 
   return (
-    <>
-      <DashboardContent>
+    <DashboardContent>
         <CustomBreadcrumbs
           heading="Déclaration d'impôt"
           links={[
@@ -66,6 +69,5 @@ export default function DepotView({ data, loading }) {
         />
         {loading ? renderLoading : <FileManagerView folders={data} setServiceStatus={setServiceStatus} status={serviceStatus.value}/>}
       </DashboardContent>
-    </>
   );
 }

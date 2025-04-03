@@ -1,8 +1,12 @@
-import { Box, Button, Card, Typography } from '@mui/material';
 import React from 'react';
-import { ConfirmDialog } from 'src/components/custom-dialog';
+
+import { Box, Card, Button, Typography } from '@mui/material';
+
 import { useBoolean } from 'src/hooks/use-boolean';
+
 import { fDate, today } from 'src/utils/format-time';
+
+import { ConfirmDialog } from 'src/components/custom-dialog';
 
 export default function DepotDetailsRow({ file, onRemove }) {
   const confirm = useBoolean();

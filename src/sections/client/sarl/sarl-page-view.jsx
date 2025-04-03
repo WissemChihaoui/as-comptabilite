@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
-import { paths } from 'src/routes/paths';
-import { SARL_DOC } from 'src/_mock/_categories';
-import { Iconify } from 'src/components/iconify';
-import { ProductItemSkeleton } from 'src/components/skeleton/product-skeleton';
-import { DashboardContent } from 'src/layouts/dashboard';
-import { Label } from 'src/components/label';
-import { statusData } from 'src/_mock/_status';
-import { STORAGE_KEY } from 'src/auth/context/jwt';
 import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+
+import { paths } from 'src/routes/paths';
+
+import { statusData } from 'src/_mock/_status';
+import { DashboardContent } from 'src/layouts/dashboard';
+
+import { Label } from 'src/components/label';
+import { Iconify } from 'src/components/iconify';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
+import { ProductItemSkeleton } from 'src/components/skeleton/product-skeleton';
+
+import { STORAGE_KEY } from 'src/auth/context/jwt';
+
 import { FileManagerView } from '../single-files/view';
 
 export default function SarlPageView({data, loading}) {
@@ -44,8 +48,7 @@ export default function SarlPageView({data, loading}) {
       fetchServiceStatus();
     }, [data]);
   return (
-    <>
-      <DashboardContent>
+    <DashboardContent>
         <CustomBreadcrumbs
           heading="Constitution d'entreprise SARL"
           links={[
@@ -65,6 +68,5 @@ export default function SarlPageView({data, loading}) {
         
         {loading ? renderLoading : <FileManagerView files={data} setServiceStatus={setServiceStatus} serviceId={2}/> }
       </DashboardContent>
-    </>
   );
 }

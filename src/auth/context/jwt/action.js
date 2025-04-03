@@ -58,7 +58,7 @@ export const signUp = async ({ email, password, name }) => {
  *************************************** */
 export const signOut = async () => {
   try {
-    const res = await axios.post(endpoints.auth.signOut);
+    await axios.post(endpoints.auth.signOut);
     await setSession(null);
   } catch (error) {
     console.error('Error during sign out:', error);

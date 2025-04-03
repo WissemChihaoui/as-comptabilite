@@ -1,26 +1,27 @@
-import { useState, useCallback, useEffect } from 'react';
+import axios from 'axios';
+import { useState, useCallback } from 'react';
 
 import Button from '@mui/material/Button';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Stack, Divider, TextField, InputLabel, Typography } from '@mui/material';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 import { useSetState } from 'src/hooks/use-set-state';
 
 import { fIsAfter, fIsBetween } from 'src/utils/format-time';
-import { Divider, InputLabel, Stack, TextField, Typography } from '@mui/material';
+
+import { usePutRecords } from 'src/actions/user';
 
 import { toast } from 'src/components/snackbar';
 import { fileFormat } from 'src/components/file-thumbnail';
 import { EmptyContent } from 'src/components/empty-content';
 import { ConfirmDialog } from 'src/components/custom-dialog';
-import Grid from '@mui/material/Unstable_Grid2';
-import { useMockedUser } from 'src/auth/hooks';
 import { useTable, rowInPage, getComparator } from 'src/components/table';
-import axios from 'axios';
-import { usePutRecords } from 'src/actions/user';
+
+import { useMockedUser } from 'src/auth/hooks';
 import { STORAGE_KEY } from 'src/auth/context/jwt';
 
 import { FileManagerTable } from '../file-manager-table';
-import { FileManagerNewFolderDialog } from '../file-manager-new-folder-dialog';
 
 // ----------------------------------------------------------------------
 
@@ -34,8 +35,6 @@ export function FileManagerView({ files, setServiceStatus, serviceId }) {
   const table = useTable({ defaultRowsPerPage: 10 });
 
   const confirm = useBoolean();
-
-  const upload = useBoolean();
 
   const [tableData, setTableData] = useState(files);
 
@@ -111,23 +110,20 @@ export function FileManagerView({ files, setServiceStatus, serviceId }) {
             },
           });
   
-          // console.log('Response:', response.data);
-  
-          // Handle the response status
           switch (response.data.status) {
             case 'form_not_found':
               toast.info('Remplissez les documents nécessaires.');
               break;
             case 'submitted_for_review':
               toast.success('Formulaire soumis pour révision.');
-              setServiceStatus({ value: 'review', label: 'En attente', color: 'warning' }); // Update the status
+              setServiceStatus({ value: 'review', label: 'En attente', color: 'warning' });
               break;
             case 'form_in_review':
               toast.warning('Le formulaire est déjà en révision.');
               break;
             case 'form_accepted':
               toast.success('Formulaire accepté.');
-              setServiceStatus({ value: 'accepted', label: 'Accepté', color: 'success' }); // Update the status
+              setServiceStatus({ value: 'accepted', label: 'Accepté', color: 'success' });
               break;
             default:
               toast.error('Erreur inattendue.');

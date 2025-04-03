@@ -1,9 +1,7 @@
 import { Helmet } from 'react-helmet-async';
-import { useGetDocuments } from 'src/actions/documents';
 
 import { CONFIG } from 'src/config-global';
 
-import { BlankView } from 'src/sections/blank/view';
 import HomePageView from 'src/sections/client/home/home-page-view';
 
 // ----------------------------------------------------------------------

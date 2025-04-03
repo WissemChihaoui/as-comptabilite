@@ -1,16 +1,17 @@
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
+import { Link, Tooltip } from '@mui/material';
 import ListItemText from '@mui/material/ListItemText';
+
+import { paths } from 'src/routes/paths';
+import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
 import { CONFIG } from 'src/config-global';
 
 import { Iconify } from 'src/components/iconify';
-import { Link, Tooltip } from '@mui/material';
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
 
 // ----------------------------------------------------------------------
 
@@ -61,8 +62,7 @@ export function FileManagerFolderItem({ sx, folder, selected, onSelect, canEdit,
   );
 
   return (
-    <>
-      <Link component={RouterLink} href={canEdit && paths.dashboard.declarationImpotDrop(folder.id)}>
+    <Link component={RouterLink} href={canEdit && paths.dashboard.declarationImpotDrop(folder.id)}>
         <Paper
           variant="outlined"
           sx={{
@@ -88,6 +88,5 @@ export function FileManagerFolderItem({ sx, folder, selected, onSelect, canEdit,
           {renderText}
         </Paper>
       </Link>
-    </>
   );
 }

@@ -1,13 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
-import { Iconify } from 'src/components/iconify';
-import { ProductItemSkeleton } from 'src/components/skeleton/product-skeleton';
-import { paths } from 'src/routes/paths';
-import { DashboardContent } from 'src/layouts/dashboard';
-import { statusData } from 'src/_mock/_status';
-import { Label } from 'src/components/label';
-import { STORAGE_KEY } from 'src/auth/context/jwt';
 import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+
+import { paths } from 'src/routes/paths';
+
+import { statusData } from 'src/_mock/_status';
+import { DashboardContent } from 'src/layouts/dashboard';
+
+import { Label } from 'src/components/label';
+import { Iconify } from 'src/components/iconify';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
+import { ProductItemSkeleton } from 'src/components/skeleton/product-skeleton';
+
+import { STORAGE_KEY } from 'src/auth/context/jwt';
+
 import { FileManagerView } from '../../single-files/view';
 
 export default function DemandePageView({ data, loading }) {
@@ -28,17 +33,15 @@ export default function DemandePageView({ data, loading }) {
           },
         });
 
-        // console.log('Response:', response.data);
-
-        const fetchedStatus = response.data.status || 'none'; // Default to 'none' if no status found
+        const fetchedStatus = response.data.status || 'none';
 
         const selectedStatus =
-          statusData.find((status) => status.value === fetchedStatus) || statusData[0]; // Default to "Pas demandé"
+          statusData.find((status) => status.value === fetchedStatus) || statusData[0];
 
         setServiceStatus(selectedStatus);
       } catch (error) {
         console.error('Erreur lors de la récupération du statut:', error);
-        setServiceStatus(statusData[0]); // Set to "Pas demandé" on error
+        setServiceStatus(statusData[0]);
       }
     };
 
@@ -46,8 +49,7 @@ export default function DemandePageView({ data, loading }) {
   }, [data]);
 
   return (
-    <>
-      <DashboardContent>
+    <DashboardContent>
         <CustomBreadcrumbs
           heading="Demande d'autorisation"
           links={[
@@ -62,10 +64,13 @@ export default function DemandePageView({ data, loading }) {
             },
           ]}
           sx={{ mb: { xs: 3, md: 5 } }}
-          action={<Label color={serviceStatus.color}>{serviceStatus.label}</Label>} // ✅ Dynamic status
+          action={<Label color={serviceStatus.color}>{serviceStatus.label}</Label>}
         />
-        {loading ? renderLoading : <FileManagerView files={data} setServiceStatus={setServiceStatus} serviceId={1}/>}
+        {loading ? (
+          renderLoading
+        ) : (
+          <FileManagerView files={data} setServiceStatus={setServiceStatus} serviceId={1} />
+        )}
       </DashboardContent>
-    </>
   );
 }

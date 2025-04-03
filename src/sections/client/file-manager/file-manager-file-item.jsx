@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -27,9 +27,6 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import { FileThumbnail } from 'src/components/file-thumbnail';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
-import { FileManagerShareDialog } from './file-manager-share-dialog';
-import { FileManagerFileDetails } from './file-manager-file-details';
-
 // ----------------------------------------------------------------------
 
 export function FileManagerFileItem({ file, selected, onSelect, onDelete, sx, ...other }) {
@@ -46,12 +43,6 @@ export function FileManagerFileItem({ file, selected, onSelect, onDelete, sx, ..
   const { copy } = useCopyToClipboard();
 
   const favorite = useBoolean(file.isFavorited);
-
-  const [inviteEmail, setInviteEmail] = useState('');
-
-  const handleChangeInvite = useCallback((event) => {
-    setInviteEmail(event.target.value);
-  }, []);
 
   const handleCopy = useCallback(() => {
     toast.success('Copied!');
