@@ -58,5 +58,7 @@ export const paths = {
   },
   admin: {
     root: ROOTS.ADMIN,
+    demandes: `${ROOTS.ADMIN}/demandes`,
+    users: `${ROOTS.ADMIN}/users`,
   }
 };

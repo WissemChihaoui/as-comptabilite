@@ -24,7 +24,7 @@ export function NotificationItem({ notification, handleMark }) {
         >
           <Box
             component="img"
-            src={`${CONFIG.assetsDir}/assets/icons/notification/${(notification.type === 'form_submission' && 'submit') || (notification.type === 'form_rejection' && 'rejected') || (notification.type === 'form_accepted' && 'accepted') || (notification.type === 'new_connection' && 'connect')}.png`}
+            src={`${CONFIG.assetsDir}/assets/icons/notification/${(notification.type === 'form_submission' && 'submit') || (notification.type === 'form_rejection' && 'rejected') || (notification.type === 'form_accepted' && 'accepted') || (notification.type === 'new_connection' && 'connect') || (notification.type === 'form_deleted' && 'deleted')}.png`}
             sx={{ width: 24, height: 24 }}
           />
         </Stack>
@@ -74,7 +74,6 @@ export function NotificationItem({ notification, handleMark }) {
     />
   );
 
-
   return (
     <ListItemButton
       disableRipple
@@ -89,9 +88,7 @@ export function NotificationItem({ notification, handleMark }) {
 
       {renderAvatar}
 
-      <Stack sx={{ flexGrow: 1 }}>
-        {renderText}
-      </Stack>
+      <Stack sx={{ flexGrow: 1 }}>{renderText}</Stack>
     </ListItemButton>
   );
 }

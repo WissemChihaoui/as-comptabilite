@@ -16,14 +16,28 @@ export function useGetUser() {
   const url = endpoints.auth.me;
 
   const { data } = useSWR(url, fetcher, swrOptions);
-  const memorizedValue = useMemo(
+  const memoizedValue = useMemo(
     () => ({
       userData: data || [],
     }),
     [data]
   );
 
-  return memorizedValue;
+  return memoizedValue;
+}
+
+export function useGetUsers(){
+  const url = endpoints.users.all;
+
+  const { data } = useSWR(url, fetcher, swrOptions);
+  const memoizedValue = useMemo(
+    () => ({
+      usersData: data ?? [],
+    }),
+    [data]
+  );
+
+  return memoizedValue;
 }
 
 export function usePutRecords() {

@@ -65,5 +65,15 @@ export const endpoints = {
   },
   notification: {
     user: '/api/notifications',
+  },
+  services: {
+    all: '/api/services',
+  },
+  forms: {
+    all: '/api/forms',
+    deleteForm: (id)=> `/api/forms/${id}`
+  },
+  users: {
+    all: '/api/users'
   }
 };
