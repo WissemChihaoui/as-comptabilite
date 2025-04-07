@@ -59,6 +59,7 @@ export const paths = {
   admin: {
     root: ROOTS.ADMIN,
     demandes: `${ROOTS.ADMIN}/demandes`,
+    viewForm: (id)=>`${ROOTS.ADMIN}/${id}/demandes`,
     users: `${ROOTS.ADMIN}/users`,
   }
 };

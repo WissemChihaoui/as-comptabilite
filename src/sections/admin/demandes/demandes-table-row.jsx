@@ -66,7 +66,6 @@ export function DemandesTableRow({
           if (!result.success) throw new Error(result.message);
 
           edit.onFalse();
-          //   setTableData(forms);
         },
         {
           loading: 'Mise à jour en cours...',

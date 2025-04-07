@@ -8,6 +8,15 @@ export const USER_STATUS_OPTIONS = [
   { value: 'banned', label: 'Banned' },
   { value: 'rejected', label: 'Rejected' },
 ];
+export const USER_SITUATIONS_OPTIONS = [
+  { value: 'Célibataire', label: 'Célibataire' },
+  { value: 'Marié(e)', label: 'Marié(e)' },
+  { value: 'Divorcé(e)', label: 'Divorcé(e)' },
+  { value: 'Veuf(ve)', label: 'Veuf(ve)' },
+  { value: 'Pacsé(e)', label: 'Pacsé(e)' },
+  { value: 'Séparé(e)', label: 'Séparé(e)' },
+  { value: 'En concubinage', label: 'En concubinage' },
+];
 
 export const _userAbout = {
   id: _mock.id(1),

@@ -282,8 +282,8 @@ export function FileManagerFolderItem({ sx, folder, selected, onSelect, onDelete
       <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}
-        title="Delete"
-        content="Are you sure want to delete?"
+        title="Supprimer"
+        content="Êtes-vous sûr de vouloir supprimer ?"
         action={
           <Button variant="contained" color="error" onClick={onDelete}>
             Delete

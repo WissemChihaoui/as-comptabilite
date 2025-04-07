@@ -8,16 +8,14 @@ import TableBody from '@mui/material/TableBody';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
-import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 import { useSetState } from 'src/hooks/use-set-state';
 
-import { useGetUsers } from 'src/actions/user';
 import { DashboardContent } from 'src/layouts/dashboard';
+import { useGetUsers, useDeleteUser } from 'src/actions/user';
 
 import { toast } from 'src/components/snackbar';
-import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
@@ -52,6 +50,8 @@ const TABLE_HEAD = [
 export function UsersListView() {
   const { usersData } = useGetUsers();
 
+  const { deleteUser } = useDeleteUser();
+
   const table = useTable();
 
   const router = useRouter();
@@ -82,18 +82,18 @@ export function UsersListView() {
 
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
 
-  const handleDeleteRow = useCallback(
-    (id) => {
-      const deleteRow = tableData.filter((row) => row.id !== id);
-
-      toast.success('Delete success!');
-
-      setTableData(deleteRow);
-
-      table.onUpdatePageDeleteRow(dataInPage.length);
-    },
-    [dataInPage.length, table, tableData]
-  );
+  const handleDeleteRow = async (id) => {
+    toast.promise(
+      async () => {
+        await deleteUser(id);
+      },
+      {
+        loading: 'Suppression en cours...',
+        success: 'Utilisateur supprimé avec succès',
+        error: 'Échec de la suppression',
+      }
+    );
+  };
 
   const handleDeleteRows = useCallback(() => {
     const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
@@ -125,35 +125,10 @@ export function UsersListView() {
             { name: 'Utilisateurs', href: paths.admin.users },
             { name: 'Liste' },
           ]}
-          action={
-            <Button
-              component={RouterLink}
-              //   href={paths.dashboard.user.new}
-              variant="contained"
-              startIcon={<Iconify icon="mingcute:add-line" />}
-            >
-              Créer utilisateur
-            </Button>
-          }
           sx={{ mb: { xs: 3, md: 5 } }}
         />
 
         <Card>
-          {/* <UserTableToolbar
-            filters={filters}
-            onResetPage={table.onResetPage}
-            options={{ roles: _roles }}
-          /> */}
-
-          {/* {canReset && (
-            <UserTableFiltersResult
-              filters={filters}
-              totalResults={dataFiltered.length}
-              onResetPage={table.onResetPage}
-              sx={{ p: 2.5, pt: 0 }}
-            />
-          )} */}
-
           <Box sx={{ position: 'relative' }}>
             <Scrollbar>
               <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
@@ -173,14 +148,14 @@ export function UsersListView() {
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
                     .map((row) => (
-                        <UserTableRow
-                          key={row.id}
-                          row={row}
-                          selected={table.selected.includes(row.id)}
-                          onSelectRow={() => table.onSelectRow(row.id)}
-                          onDeleteRow={() => handleDeleteRow(row.id)}
-                          onEditRow={() => handleEditRow(row.id)}
-                        />
+                      <UserTableRow
+                        key={row.id}
+                        row={row}
+                        selected={table.selected.includes(row.id)}
+                        onSelectRow={() => table.onSelectRow(row.id)}
+                        onDeleteRow={() => handleDeleteRow(row.id)}
+                        onEditRow={() => handleEditRow(row.id)}
+                      />
                     ))}
 
                   <TableEmptyRows
@@ -209,7 +184,7 @@ export function UsersListView() {
       <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}
-        title="Delete"
+        title="Supprimer"
         content={
           <>
             Are you sure want to delete <strong> {table.selected.length} </strong> items?

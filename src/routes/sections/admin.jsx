@@ -13,6 +13,7 @@ import { AuthGuard } from 'src/auth/guard';
 const IndexPage = lazy(() => import('src/pages/admin/home'));
 const DemandesPage = lazy(() => import('src/pages/admin/demandes'));
 const UsersPage = lazy(() => import('src/pages/admin/users'));
+const ViewPage = lazy(() => import('src/pages/admin/viewForm'));
 
 // ----------------------------------------------------------------------
 
@@ -32,6 +33,7 @@ export const adminRoutes = [
       { element: <IndexPage />, index: true },
       { element: <DemandesPage />, path: 'demandes' },
       { element: <UsersPage />, path: 'users' },
+      { element: <ViewPage />, path: ':id/demandes' },
     ],
   },
 ];

@@ -10,15 +10,12 @@ import {
   Stack,
   Table,
   Divider,
-  Tooltip,
   TableBody,
-  IconButton,
 } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { useBoolean } from 'src/hooks/use-boolean';
 import { useSetState } from 'src/hooks/use-set-state';
 
 import { sumBy } from 'src/utils/helper';
@@ -30,7 +27,6 @@ import { DashboardContent } from 'src/layouts/admin/main';
 import { useGetForms, useDeleteForm } from 'src/actions/forms';
 
 import { Label } from 'src/components/label';
-import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import {
@@ -186,7 +182,7 @@ export default function DemandesListeView() {
 
   const handleViewRow = useCallback(
     (id) => {
-      router.push(paths.dashboard.invoice.details(id));
+      router.push(paths.admin.viewForm(id));
     },
     [router]
   );

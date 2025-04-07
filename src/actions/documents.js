@@ -79,3 +79,39 @@ export const fetchDocuments = async (serviceId, id) => {
     return [];
   }
 };
+
+export async function downloadDocumentFile(documentId) {
+  try {
+    const response = await axios.get(`http://127.0.0.1:8000/api/documents/download/${documentId}`, {
+      responseType: 'blob', // Important for binary files
+      headers: { Authorization: `Bearer ${sessionStorage.getItem(STORAGE_KEY)}` },
+    });
+
+    console.log('Response from download', response)
+
+    // Create a Blob from the response data
+    const blob = new Blob([response.data], { type: response.headers['content-type'] });
+
+    // Create a link and trigger a download
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute(
+      'download',
+      response.headers['content-disposition']
+        ? response.headers['content-disposition'].split('filename=')[1].replace(/['"]/g, '')
+        : 'downloaded_file'
+    );
+    document.body.appendChild(link);
+    link.click();
+
+    // Cleanup
+    link.remove();
+    window.URL.revokeObjectURL(url);
+
+    return { success: true };
+  } catch (error) {
+    console.error('Download error:', error);
+    return { success: false, message: error.response?.data?.message || 'Unknown error' };
+  }
+}

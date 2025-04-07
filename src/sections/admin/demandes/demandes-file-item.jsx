@@ -1,58 +1,38 @@
-import { useCallback } from 'react';
-
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
-import Divider from '@mui/material/Divider';
-import MenuList from '@mui/material/MenuList';
-import MenuItem from '@mui/material/MenuItem';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import AvatarGroup, { avatarGroupClasses } from '@mui/material/AvatarGroup';
 
 import { useBoolean } from 'src/hooks/use-boolean';
-import { useCopyToClipboard } from 'src/hooks/use-copy-to-clipboard';
 
 import { fData } from 'src/utils/format-number';
 import { fDateTime } from 'src/utils/format-time';
 
 import { maxLine } from 'src/theme/styles';
 
-import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { FileThumbnail } from 'src/components/file-thumbnail';
-import { usePopover, CustomPopover } from 'src/components/custom-popover';
+
+// import { FileManagerFileDetails } from './file-manager-file-details';
 
 // ----------------------------------------------------------------------
 
-export function FileManagerFileItem({ file, selected, onSelect, onDelete, sx, ...other }) {
-  const share = useBoolean();
+export function DemandesFileItem({ file, selected, onSelect, onDelete, onDownload, sx, ...other }) {
 
   const confirm = useBoolean();
 
   const details = useBoolean();
 
-  const popover = usePopover();
-
   const checkbox = useBoolean();
 
-  const { copy } = useCopyToClipboard();
-
-  const favorite = useBoolean(file.isFavorited);
-
-  const handleCopy = useCallback(() => {
-    toast.success('Copied!');
-    copy(file.url);
-  }, [copy, file.url]);
+  
 
   const renderIcon = (
     <Box
-      onMouseEnter={checkbox.onTrue}
-      onMouseLeave={checkbox.onFalse}
       sx={{ display: 'inline-flex', width: 36, height: 36 }}
     >
       {(checkbox.value || selected) && onSelect ? (
@@ -68,27 +48,18 @@ export function FileManagerFileItem({ file, selected, onSelect, onDelete, sx, ..
           sx={{ width: 1, height: 1 }}
         />
       ) : (
-        <FileThumbnail file={file.type} sx={{ width: 1, height: 1 }} />
+        <FileThumbnail file={file.original_name} sx={{ width: 1, height: 1 }} />
       )}
     </Box>
   );
 
   const renderAction = (
     <Stack direction="row" alignItems="center" sx={{ top: 8, right: 8, position: 'absolute' }}>
-      <Checkbox
-        color="warning"
-        icon={<Iconify icon="eva:star-outline" />}
-        checkedIcon={<Iconify icon="eva:star-fill" />}
-        checked={favorite.value}
-        onChange={favorite.onToggle}
-        inputProps={{
-          id: `favorite-checkbox-${file.id}`,
-          'aria-label': `Favorite checkbox`,
-        }}
-      />
-
-      <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
-        <Iconify icon="eva:more-vertical-fill" />
+      <IconButton onClick={onDownload}>
+        <Iconify icon="material-symbols:download-rounded"/>
+      </IconButton>
+      <IconButton color='error' onClick={()=>confirm.onTrue()}>
+        <Iconify icon="tabler:trash"/>
       </IconButton>
     </Stack>
   );
@@ -105,7 +76,7 @@ export function FileManagerFileItem({ file, selected, onSelect, onDelete, sx, ..
           width: 1,
         })}
       >
-        {file.name}
+        {file.original_name}
       </Typography>
 
       <Stack
@@ -118,7 +89,7 @@ export function FileManagerFileItem({ file, selected, onSelect, onDelete, sx, ..
           color: 'text.disabled',
         }}
       >
-        {fData(file.size)}
+        {fData(file.file_size)}
 
         <Box
           component="span"
@@ -138,27 +109,13 @@ export function FileManagerFileItem({ file, selected, onSelect, onDelete, sx, ..
     </>
   );
 
-  const renderAvatar = (
-    <AvatarGroup
-      max={3}
-      sx={{
-        mt: 1,
-        [`& .${avatarGroupClasses.avatar}`]: {
-          width: 24,
-          height: 24,
-          '&:first-of-type': { fontSize: 12 },
-        },
-      }}
-    >
-      {file.shared?.map((person) => (
-        <Avatar key={person.id} alt={person.name} src={person.avatarUrl} />
-      ))}
-    </AvatarGroup>
-  );
+
 
   return (
     <>
       <Paper
+      onMouseEnter={checkbox.onTrue}
+      onMouseLeave={checkbox.onFalse}
         variant="outlined"
         sx={{
           p: 2.5,
@@ -181,61 +138,19 @@ export function FileManagerFileItem({ file, selected, onSelect, onDelete, sx, ..
 
         {renderText}
 
-        {renderAvatar}
 
         {renderAction}
       </Paper>
 
-      <CustomPopover
-        open={popover.open}
-        anchorEl={popover.anchorEl}
-        onClose={popover.onClose}
-        slotProps={{ arrow: { placement: 'right-top' } }}
-      >
-        <MenuList>
-          <MenuItem
-            onClick={() => {
-              popover.onClose();
-              handleCopy();
-            }}
-          >
-            <Iconify icon="eva:link-2-fill" />
-            Copy Link
-          </MenuItem>
-
-          <MenuItem
-            onClick={() => {
-              popover.onClose();
-              share.onTrue();
-            }}
-          >
-            <Iconify icon="solar:share-bold" />
-            Share
-          </MenuItem>
-
-          <Divider sx={{ borderStyle: 'dashed' }} />
-
-          <MenuItem
-            onClick={() => {
-              confirm.onTrue();
-              popover.onClose();
-            }}
-            sx={{ color: 'error.main' }}
-          >
-            <Iconify icon="solar:trash-bin-trash-bold" />
-            Delete
-          </MenuItem>
-        </MenuList>
-      </CustomPopover>
 
       <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}
         title="Supprimer"
-        content="Êtes-vous sûr de vouloir supprimer ?"
+        content="Êtes-vous sûr de vouloir effacer ?"
         action={
           <Button variant="contained" color="error" onClick={onDelete}>
-            Delete
+            Supprimer
           </Button>
         }
       />

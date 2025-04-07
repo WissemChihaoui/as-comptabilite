@@ -99,44 +99,48 @@ export function FileManagerView({ files, setServiceStatus, serviceId }) {
   };
 
   const SubmitFiles = async (e) => {
-      e.preventDefault();
-  
-      if (matricule) {
-        try {
-          const response = await axios.post(`http://127.0.0.1:8000/api/form/${serviceId}`, {}, {
+    e.preventDefault();
+
+    if (matricule) {
+      try {
+        const response = await axios.post(
+          `http://127.0.0.1:8000/api/form/${serviceId}`,
+          {},
+          {
             headers: {
               Authorization: `Bearer ${sessionStorage.getItem(STORAGE_KEY)}`,
               'Content-Type': 'application/json',
             },
-          });
-  
-          switch (response.data.status) {
-            case 'form_not_found':
-              toast.info('Remplissez les documents nécessaires.');
-              break;
-            case 'submitted_for_review':
-              toast.success('Formulaire soumis pour révision.');
-              setServiceStatus({ value: 'review', label: 'En attente', color: 'warning' });
-              break;
-            case 'form_in_review':
-              toast.warning('Le formulaire est déjà en révision.');
-              break;
-            case 'form_accepted':
-              toast.success('Formulaire accepté.');
-              setServiceStatus({ value: 'accepted', label: 'Accepté', color: 'success' });
-              break;
-            default:
-              toast.error('Erreur inattendue.');
-              break;
           }
-        } catch (error) {
-          console.error("Erreur lors de l'envoi du formulaire:", error);
-          toast.error("Échec de l'envoi du formulaire. Veuillez réessayer.");
+        );
+
+        switch (response.data.status) {
+          case 'form_not_found':
+            toast.info('Remplissez les documents nécessaires.');
+            break;
+          case 'submitted_for_review':
+            toast.success('Formulaire soumis pour révision.');
+            setServiceStatus({ value: 'review', label: 'En attente', color: 'warning' });
+            break;
+          case 'form_in_review':
+            toast.warning('Le formulaire est déjà en révision.');
+            break;
+          case 'form_accepted':
+            toast.success('Formulaire accepté.');
+            setServiceStatus({ value: 'accepted', label: 'Accepté', color: 'success' });
+            break;
+          default:
+            toast.error('Erreur inattendue.');
+            break;
         }
-      } else {
-        toast.info('Complétez vos informations!');
+      } catch (error) {
+        console.error("Erreur lors de l'envoi du formulaire:", error);
+        toast.error("Échec de l'envoi du formulaire. Veuillez réessayer.");
       }
-    };
+    } else {
+      toast.info('Complétez vos informations!');
+    }
+  };
 
   return (
     <>
@@ -167,7 +171,6 @@ export function FileManagerView({ files, setServiceStatus, serviceId }) {
         />
       )}
 
-      
       <Stack my={2} alignItems="flex-start">
         <Button variant="contained" color="primary" onClick={(e) => SubmitFiles(e)}>
           Envoyer ma demande
@@ -176,7 +179,7 @@ export function FileManagerView({ files, setServiceStatus, serviceId }) {
       <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}
-        title="Delete"
+        title="Supprimer"
         content={
           <>
             Are you sure want to delete <strong> {table.selected.length} </strong> items?
