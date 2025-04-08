@@ -149,7 +149,10 @@ export function DemandesFileItem({ file, selected, onSelect, onDelete, onDownloa
         title="Supprimer"
         content="Êtes-vous sûr de vouloir effacer ?"
         action={
-          <Button variant="contained" color="error" onClick={onDelete}>
+          <Button variant="contained" color="error" onClick={()=> {
+            onDelete();
+            confirm.onFalse()
+          }}>
             Supprimer
           </Button>
         }

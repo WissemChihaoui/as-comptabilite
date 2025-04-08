@@ -1,3 +1,4 @@
+import { mutate } from 'swr';
 import { toast } from 'sonner';
 import React, { useRef, useState, useCallback } from 'react';
 
@@ -15,6 +16,7 @@ import {
 
 import { useSetState } from 'src/hooks/use-set-state';
 
+import { endpoints } from 'src/utils/axios';
 import { fDate } from 'src/utils/format-time';
 
 import { statusData } from 'src/_mock/_status';
@@ -23,6 +25,7 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { downloadDocumentFile } from 'src/actions/documents';
 
 import { Iconify } from 'src/components/iconify';
+import { STORAGE_KEY } from 'src/components/settings';
 import { EmptyContent } from 'src/components/empty-content';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 import { useTable, rowInPage, getComparator } from 'src/components/table';
@@ -83,18 +86,37 @@ export function DemandesViewPage({ form }) {
 
   const dataInPage = rowInPage(dataFiltered, table.page, table.rowsPerPage);
 
-  const handleDeleteItem = useCallback(
-    (id) => {
-      const deleteRow = tableData.filter((row) => row.id !== id);
-
-      toast.success('Delete success!');
-
-      setTableData(deleteRow);
-
-      table.onUpdatePageDeleteRow(dataInPage.length);
-    },
-    [dataInPage.length, table, tableData]
-  );
+  const handleDeleteItem = (id) => {
+      const token = sessionStorage.getItem(STORAGE_KEY);
+  
+      const deletePromise = fetch(`http://127.0.0.1:8000/api/documents/${id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }).then(async (response) => {
+        if (!response.ok) {
+          const errorData = await response.text();
+          try {
+            const jsonData = JSON.parse(errorData);
+            throw new Error(jsonData?.message || 'Erreur lors de la suppression');
+          } catch {
+            throw new Error(errorData || 'Erreur lors de la suppression');
+          }
+        }
+  
+        return 'Suppression effectuée!';
+      });
+  
+      toast.promise(deletePromise, {
+        loading: 'En cours de suppression...',
+        success: 'Suppression effectuée!',
+        error: 'Erreur lors de la suppression!',
+      });
+  
+      return deletePromise;
+    };
 
   const handleDownloadItem = async (id) => {
     const result = await downloadDocumentFile(id);
