@@ -32,7 +32,7 @@ const layoutContent = (
 export const dashboardRoutes = [
   {
     path: 'dashboard',
-    element: CONFIG.auth.skip ? <>{layoutContent}</> : <AuthGuard>{layoutContent}</AuthGuard>,
+    element: CONFIG.auth.skip ? <>{layoutContent}</> : <AuthGuard requiredRole="user">{layoutContent}</AuthGuard>,
     children: [
       { element: <IndexPage />, index: true },
       { element: <DepotPage />, path: 'declaration-impot'},

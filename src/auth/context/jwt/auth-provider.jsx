@@ -26,20 +26,14 @@ export function AuthProvider({ children }) {
 
         const res = await axios.get(endpoints.auth.me);
 
-        // console.log("res.data from checkUserSession", res.data)
-
         const user = res.data;
-
-        // console.log("user from checkUserSession", user)
 
         setState({ user: { ...user, accessToken }, loading: false });
 
-        // console.log("state from checkUserSession", state)
       } else {
         setState({ user: null, loading: false });
       }
     } catch (error) {
-      console.error(error);
       setState({ user: null, loading: false });
     }
   }, [setState]);
@@ -60,7 +54,7 @@ export function AuthProvider({ children }) {
       user: state.user
         ? {
             ...state.user,
-            role: state.user?.isAdmin === 1 ?? 'admin',
+            role: state.user?.isAdmin === 1 ? 'admin' : 'user',
           }
         : null,
       checkUserSession,
@@ -70,7 +64,8 @@ export function AuthProvider({ children }) {
     }),
     [checkUserSession, state.user, status]
   );
-  console.log("memoizedValue from AuthProvider",memoizedValue)
+
+  console.log(memoizedValue)
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;
 }

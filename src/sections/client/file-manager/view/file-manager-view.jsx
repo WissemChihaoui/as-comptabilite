@@ -66,8 +66,6 @@ export function FileManagerView({ folders, setServiceStatus, status }) {
           },
         });
 
-        // console.log('Response:', response.data);
-
         // Handle the response status
         switch (response.data.status) {
           case 'form_not_found':

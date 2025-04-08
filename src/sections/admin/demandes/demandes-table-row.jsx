@@ -52,8 +52,6 @@ export function DemandesTableRow({
 
   const [statusValue, setStatusValue] = useState(row.status);
 
-  console.log('on change status', statusValue);
-
   const edit = useBoolean();
 
   const popover = usePopover();

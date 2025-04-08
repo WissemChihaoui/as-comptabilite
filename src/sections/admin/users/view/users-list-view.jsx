@@ -65,8 +65,6 @@ export function UsersListView() {
     }
   }, [usersData]);
 
-  console.log(tableData);
-
   const filters = useSetState({ name: '', role: [] });
 
   const dataFiltered = applyFilter({

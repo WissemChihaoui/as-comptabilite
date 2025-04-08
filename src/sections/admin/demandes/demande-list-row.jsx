@@ -8,7 +8,6 @@ import { DemandesRowPanel } from './demandes-row-panel';
 import { DemandesFileItem } from './demandes-file-item';
 
 export function DemandeListRow({ document, onDeleteItem, onDownloadItem }) {
-  console.log('document', document);
   const files = useBoolean();
   const upload = useBoolean();
   const [userDocuments, setUserDocuments] = useState([]);
@@ -26,8 +25,6 @@ export function DemandeListRow({ document, onDeleteItem, onDownloadItem }) {
       setUserDocuments([]);
     }
   }, [document]);
-
-  console.log(userDocuments);
   return (
     <>
       <DemandesRowPanel

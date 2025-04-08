@@ -2,16 +2,7 @@ import { toast } from 'sonner';
 import { useTheme } from '@emotion/react';
 import React, { useState, useEffect, useCallback } from 'react';
 
-import {
-  Tab,
-  Box,
-  Card,
-  Tabs,
-  Stack,
-  Table,
-  Divider,
-  TableBody,
-} from '@mui/material';
+import { Tab, Box, Card, Tabs, Stack, Table, Divider, TableBody } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
@@ -70,8 +61,6 @@ export default function DemandesListeView() {
   }, [servicesData]);
 
   const { forms } = useGetForms();
-
-  console.log('forms', forms);
 
   const theme = useTheme();
 
@@ -177,8 +166,6 @@ export default function DemandesListeView() {
     },
     [dataInPage.length, table, tableData, deleteForm]
   );
-
-  
 
   const handleViewRow = useCallback(
     (id) => {

@@ -31,7 +31,5 @@ export function useMockedUser() {
     isPublic: true,
   };
 
-  // console.log("user :", user)
-
   return { user };
 }

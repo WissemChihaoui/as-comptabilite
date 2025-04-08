@@ -25,8 +25,6 @@ export default function Page() {
 
     const { form, formLoading, formError } = useGetForm(id) 
 
-    console.log('form',form)
-
      if (formLoading) {
         return <DemandesDetailsSkeleton />;
       }

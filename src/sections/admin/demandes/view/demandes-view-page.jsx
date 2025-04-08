@@ -1,4 +1,3 @@
-import { mutate } from 'swr';
 import { toast } from 'sonner';
 import React, { useRef, useState, useCallback } from 'react';
 
@@ -16,7 +15,6 @@ import {
 
 import { useSetState } from 'src/hooks/use-set-state';
 
-import { endpoints } from 'src/utils/axios';
 import { fDate } from 'src/utils/format-time';
 
 import { statusData } from 'src/_mock/_status';
@@ -25,11 +23,12 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { downloadDocumentFile } from 'src/actions/documents';
 
 import { Iconify } from 'src/components/iconify';
-import { STORAGE_KEY } from 'src/components/settings';
 import { EmptyContent } from 'src/components/empty-content';
+import { useTable, getComparator } from 'src/components/table';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
-import { useTable, rowInPage, getComparator } from 'src/components/table';
 import { FiltersBlock, FiltersResult } from 'src/components/filters-result';
+
+import { STORAGE_KEY } from 'src/auth/context/jwt';
 
 import { DemandeListRow } from '../demande-list-row';
 
@@ -84,39 +83,37 @@ export function DemandesViewPage({ form }) {
       })
     : [];
 
-  const dataInPage = rowInPage(dataFiltered, table.page, table.rowsPerPage);
-
   const handleDeleteItem = (id) => {
-      const token = sessionStorage.getItem(STORAGE_KEY);
-  
-      const deletePromise = fetch(`http://127.0.0.1:8000/api/documents/${id}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      }).then(async (response) => {
-        if (!response.ok) {
-          const errorData = await response.text();
-          try {
-            const jsonData = JSON.parse(errorData);
-            throw new Error(jsonData?.message || 'Erreur lors de la suppression');
-          } catch {
-            throw new Error(errorData || 'Erreur lors de la suppression');
-          }
+    const token = sessionStorage.getItem(STORAGE_KEY);
+
+    const deletePromise = fetch(`http://127.0.0.1:8000/api/documents/${id}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }).then(async (response) => {
+      if (!response.ok) {
+        const errorData = await response.text();
+        try {
+          const jsonData = JSON.parse(errorData);
+          throw new Error(jsonData?.message || 'Erreur lors de la suppression');
+        } catch {
+          throw new Error(errorData || 'Erreur lors de la suppression');
         }
-  
-        return 'Suppression effectuée!';
-      });
-  
-      toast.promise(deletePromise, {
-        loading: 'En cours de suppression...',
-        success: 'Suppression effectuée!',
-        error: 'Erreur lors de la suppression!',
-      });
-  
-      return deletePromise;
-    };
+      }
+      
+      return 'Suppression effectuée!';
+    });
+
+    toast.promise(deletePromise, {
+      loading: 'En cours de suppression...',
+      success: 'Suppression effectuée!',
+      error: 'Erreur lors de la suppression!',
+    });
+
+    return deletePromise;
+  };
 
   const handleDownloadItem = async (id) => {
     const result = await downloadDocumentFile(id);
@@ -168,10 +165,20 @@ export function DemandesViewPage({ form }) {
           <Typography variant="h4">{form.service.name}</Typography>
           <Stack direction="row" gap={2}>
             <Typography variant="caption">{form.user.name}</Typography>
-            {form.user.matricule && <Typography variant="caption">Matricule: {form.user.matricule}</Typography>}
-            {form.user.demenagement && <Typography variant="caption">Date démenagement: {fDate(form.user.demenagement)}</Typography>}
-            {form.user.adresse && <Typography variant="caption">Addresse: {form.user.adresse}</Typography>}
-            {form.user.situation && <Typography variant="caption">Situation: {form.user.situation}</Typography>}
+            {form.user.matricule && (
+              <Typography variant="caption">Matricule: {form.user.matricule}</Typography>
+            )}
+            {form.user.demenagement && (
+              <Typography variant="caption">
+                Date démenagement: {fDate(form.user.demenagement)}
+              </Typography>
+            )}
+            {form.user.adresse && (
+              <Typography variant="caption">Addresse: {form.user.adresse}</Typography>
+            )}
+            {form.user.situation && (
+              <Typography variant="caption">Situation: {form.user.situation}</Typography>
+            )}
           </Stack>
         </Stack>
         <Stack direction="row" gap={4} alignItems="center">
@@ -244,7 +251,7 @@ export function DemandesViewPage({ form }) {
 }
 
 function applyFilter({ inputData, comparator, filters }) {
-  console.log(inputData);
+
   const { name } = filters;
 
   const stabilizedThis = inputData.documents.map((el, index) => [el, index]);

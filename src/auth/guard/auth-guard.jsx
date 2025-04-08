@@ -13,12 +13,13 @@ import { useAuthContext } from '../hooks';
 
 export function AuthGuard({ children }) {
   const router = useRouter();
-
   const pathname = usePathname();
-
   const searchParams = useSearchParams();
 
-  const { authenticated, loading } = useAuthContext();
+  const { authenticated, loading, user } = useAuthContext();
+
+  console.log("from auth-guard :", user)
+  console.log("Required ", user?.role)
 
   const [isChecking, setIsChecking] = useState(true);
 
@@ -26,17 +27,15 @@ export function AuthGuard({ children }) {
     (name, value) => {
       const params = new URLSearchParams(searchParams.toString());
       params.set(name, value);
-
       return params.toString();
     },
     [searchParams]
   );
 
   const checkPermissions = async () => {
-    if (loading) {
-      return;
-    }
+    if (loading) return;
 
+    // 🚫 Not authenticated
     if (!authenticated) {
       const { method } = CONFIG.auth;
 
@@ -49,12 +48,17 @@ export function AuthGuard({ children }) {
       }[method];
 
       const href = `${signInPath}?${createQueryString('returnTo', pathname)}`;
-
       router.replace(href);
       return;
     }
-
     setIsChecking(false);
+
+    // 🔐 Check role
+    if (user && user?.role) {
+      // Redirect unauthorized users (e.g., user trying to access /admin)
+      if(user?.role=== "admin") router.replace(paths.admin.root);
+      if(user?.role=== "user") router.replace(paths.dashboard.root);
+    }
   };
 
   useEffect(() => {

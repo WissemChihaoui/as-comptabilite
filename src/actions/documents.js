@@ -51,13 +51,10 @@ export async function dropFiles(files, serviceId, documentId) {
     return response.data;
   } catch (error) {
     if (error.response) {
-      console.error('❌ Upload Error:', error.response.data);
       throw new Error(error.response.data);
     } else if (error.request) {
-      console.error('❌ No response received:', error.request);
       throw new Error('No response received');
     } else {
-      console.error('❌ Upload Error:', error.message);
       throw new Error(error.message);
     }
   }
@@ -87,8 +84,6 @@ export async function downloadDocumentFile(documentId) {
       headers: { Authorization: `Bearer ${sessionStorage.getItem(STORAGE_KEY)}` },
     });
 
-    console.log('Response from download', response)
-
     // Create a Blob from the response data
     const blob = new Blob([response.data], { type: response.headers['content-type'] });
 
@@ -111,7 +106,6 @@ export async function downloadDocumentFile(documentId) {
 
     return { success: true };
   } catch (error) {
-    console.error('Download error:', error);
     return { success: false, message: error.response?.data?.message || 'Unknown error' };
   }
 }

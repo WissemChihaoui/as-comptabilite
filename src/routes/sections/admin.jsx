@@ -28,7 +28,7 @@ const layoutContent = (
 export const adminRoutes = [
   {
     path: 'admin',
-    element: <AuthGuard>{layoutContent}</AuthGuard>,
+    element: <AuthGuard requiredRole="admin">{layoutContent}</AuthGuard>,
     children: [
       { element: <IndexPage />, index: true },
       { element: <DemandesPage />, path: 'demandes' },

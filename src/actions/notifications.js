@@ -28,8 +28,6 @@ export function useGetNotifications() {
     [data, error, isLoading, isValidating]
   );
 
-  console.log(data); // shows correctly the notifications
-
   return memorizedValue;
 }
 

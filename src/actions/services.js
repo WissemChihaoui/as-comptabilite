@@ -27,7 +27,5 @@ export function useGetServices() {
         [data, error, isLoading, isValidating]
     );
 
-    console.log(memoizedValue)
-
     return memoizedValue;
 }

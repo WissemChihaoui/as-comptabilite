@@ -134,7 +134,6 @@ export function FileManagerView({ files, setServiceStatus, serviceId }) {
             break;
         }
       } catch (error) {
-        console.error("Erreur lors de l'envoi du formulaire:", error);
         toast.error("Échec de l'envoi du formulaire. Veuillez réessayer.");
       }
     } else {

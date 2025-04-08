@@ -19,7 +19,6 @@ export function jwtDecode(token) {
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
     const decoded = JSON.parse(atob(base64));
 
-    // console.log('Decoded Token:', decoded); // Log decoded token for debugging
     return decoded;
   } catch (error) {
     console.error('Error decoding token:', error);
@@ -30,8 +29,6 @@ export function jwtDecode(token) {
 // ----------------------------------------------------------------------
 
 export function isValidToken(accessToken) {
-  // console.log('Access Token:', accessToken);
-  // console.log('Decoded Token:', jwtDecode(accessToken));
   if (!accessToken) {
     return false;
   }
@@ -40,11 +37,10 @@ export function isValidToken(accessToken) {
     const decoded = jwtDecode(accessToken);
 
     if (!decoded || typeof decoded.exp !== 'number') {
-      console.error('Invalid token structure or exp field!');
       return false;
     }
 
-    const currentTime = Date.now() / 1000; // Convert to seconds for comparison
+    const currentTime = Date.now() / 1000;
 
     return decoded.exp > currentTime;
   } catch (error) {
@@ -76,28 +72,7 @@ export function tokenExpired(exp) {
 
 export async function setSession(accessToken = sessionStorage.getItem(STORAGE_KEY)) {
   sessionStorage.setItem(STORAGE_KEY, accessToken);
-  // console.log("hey", accessToken)
   if (accessToken) {
     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-  } else {
-    // console.log('No valid token found');
-  }
-  // try {
-  //   if (accessToken && isValidToken(accessToken)) {
-  //     sessionStorage.setItem(STORAGE_KEY, accessToken);
-
-  //     const decodedToken = jwtDecode(accessToken);
-  //     if (decodedToken && 'exp' in decodedToken) {
-  //       tokenExpired(decodedToken.exp);
-  //     } else {
-  //       throw new Error('Invalid access token!');
-  //     }
-  //   } else {
-  //     sessionStorage.removeItem(STORAGE_KEY);
-  //     delete axios.defaults.headers.common.Authorization;
-  //   }
-  // } catch (error) {
-  //   console.error('Error during set session:', error);
-  //   throw error;
-  // }
+  } 
 }

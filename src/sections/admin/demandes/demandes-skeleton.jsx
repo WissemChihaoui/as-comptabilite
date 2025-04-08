@@ -72,8 +72,6 @@ export function PostItemSkeleton({ sx, amount = 16, variant = 'vertical', ...oth
 export function DemandesDetailsSkeleton({ ...other }) {
   return (
     <Stack {...other}>
-      <Skeleton variant="rectangular" sx={{ height: 480 }} />
-
       <Stack sx={{ width: 1, maxWidth: 720, mx: 'auto' }}>
         <Stack spacing={1} sx={{ my: 8 }}>
           <Skeleton height={10} />

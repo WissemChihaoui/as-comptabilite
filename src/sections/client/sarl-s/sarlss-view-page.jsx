@@ -41,7 +41,6 @@ export default function SarlssViewPage({ data, loading }) {
     
             setServiceStatus(selectedStatus);
           } catch (error) {
-            console.error('Erreur lors de la récupération du statut:', error);
             setServiceStatus(statusData[0]);
           }
         };

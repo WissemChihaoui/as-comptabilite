@@ -37,7 +37,6 @@ export const UserQuickEditSchema = zod.object({
 // ----------------------------------------------------------------------
 
 export function UserQuickEditForm({ currentUser, open, onClose }) {
-  console.log(currentUser);
   const { updateUser } = useUpdateUser();
   const defaultValues = useMemo(
     () => ({

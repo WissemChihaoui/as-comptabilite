@@ -34,8 +34,6 @@ export function NotificationsDrawer({ sx, ...other }) {
       }
     }, [notificationsData]);
 
-  console.log('notifications', notifications) //  showing undefined
-
   const totalUnRead = notifications?.filter((item) => item.isUnRead === 1).length;
 
   const handleMarkAllAsRead = () => {

@@ -27,7 +27,6 @@ export default function DepotDetailsView({ id }) {
     const loadDocuments = async () => {
       try {
         const documents = await fetchDocuments(4, id);
-        // console.log(documents);
         setFiles(documents.filter((row) => row.document_id === Number(id)));
       } catch (error) {
         console.error('Error fetching documents:', error);
@@ -83,7 +82,6 @@ export default function DepotDetailsView({ id }) {
       // Update UI by filtering out the deleted file
       setFiles((prevFiles) => prevFiles.filter((file) => file.id !== inputFile.id));
 
-      // console.log('✅ Document supprimé avec succès');
       return 'Suppression effectuée!';
     });
 

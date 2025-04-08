@@ -27,8 +27,6 @@ export function useGetForms() {
     [data, error, isLoading, isValidating]
   );
 
-  console.log(memoizedValue);
-
   return memoizedValue;
 }
 
@@ -48,7 +46,6 @@ export function useDeleteForm() {
 
       return { success: true, message: 'Form deleted successfully' };
     } catch (error) {
-      console.error('Error deleting form:', error);
       return { success: false, message: error.response?.data?.message || 'Failed to delete form' };
     }
   };
@@ -58,7 +55,6 @@ export function useDeleteForm() {
 
 export function useUpdateForm() {
   const updateForm = async (id, status) => {
-    console.log('data for update', id, status);
     try {
       const url = `http://127.0.0.1:8000/api/forms/${id}`;
 
@@ -77,7 +73,6 @@ export function useUpdateForm() {
 
       return { success: true, data: response.data };
     } catch (error) {
-      console.error('Error updating form status:', error);
       return {
         success: false,
         message: error.response?.data?.message || 'Failed to update form status',
@@ -103,6 +98,5 @@ export function useGetForm(id) {
     [data?.form, isLoading, error, isValidating]
   );
 
-  console.log(memoizedValue)
   return memoizedValue;
 }
