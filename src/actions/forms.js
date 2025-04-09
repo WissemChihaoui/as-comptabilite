@@ -33,7 +33,7 @@ export function useGetForms() {
 export function useDeleteForm() {
   const deleteForm = async (id) => {
     try {
-      const url = `http://127.0.0.1:8000/api/forms/${id}`; // API endpoint
+      const url = `https://as-compta.ckcom.fr/api/forms/${id}`; // API endpoint
 
       await axios.delete(url, {
         headers: {
@@ -56,7 +56,7 @@ export function useDeleteForm() {
 export function useUpdateForm() {
   const updateForm = async (id, status) => {
     try {
-      const url = `http://127.0.0.1:8000/api/forms/${id}`;
+      const url = `https://as-compta.ckcom.fr/api/forms/${id}`;
 
       const response = await axios.patch(
         url,
@@ -89,7 +89,7 @@ export function useGetForm(id) {
   const { data, isLoading, error, isValidating } = useSWR(url, fetcher, swrOptions);
 
   const memoizedValue = useMemo(
-    ()=> ({
+    () => ({
       form: data?.form,
       formLoading: isLoading,
       formError: error,

@@ -34,7 +34,7 @@ export function useGetNotifications() {
 export async function handleAllRead() {
   try {
     const response = await axios.patch(
-      'http://127.0.0.1:8000/api/notifications/read',
+      'https://as-compta.ckcom.fr/api/notifications/read',
       {},
       {
         headers: {
@@ -50,18 +50,18 @@ export async function handleAllRead() {
 }
 
 export async function handleRead(id) {
-    try {
-        const response = await axios.patch(
-            `http://127.0.0.1:8000/api/notifications/read/${id}`,
-            {},
-            {
-                headers: {
-                    Authorization: `Bearer ${sessionStorage.getItem(STORAGE_KEY)}`,
-                  },
-            }
-        );
-        console.log('Notification marked as read:', response.data);
-    } catch (error) {
-        console.error('Error marking notification as read:', error);
-    }
+  try {
+    const response = await axios.patch(
+      `https://as-compta.ckcom.fr/api/notifications/read/${id}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem(STORAGE_KEY)}`,
+        },
+      }
+    );
+    console.log('Notification marked as read:', response.data);
+  } catch (error) {
+    console.error('Error marking notification as read:', error);
+  }
 }

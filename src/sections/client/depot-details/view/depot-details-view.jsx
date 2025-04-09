@@ -1,11 +1,7 @@
 import { toast } from 'sonner';
 import React, { useState, useEffect, useCallback } from 'react';
 
-import {
-  Box,
-  Card,
-  Typography,
-} from '@mui/material';
+import { Box, Card, Typography } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
 
@@ -62,7 +58,7 @@ export default function DepotDetailsView({ id }) {
     const token = sessionStorage.getItem(STORAGE_KEY); // Retrieve auth token
 
     // Create a Promise without an async executor
-    const deletePromise = fetch(`http://127.0.0.1:8000/api/documents/${inputFile.id}`, {
+    const deletePromise = fetch(`https://as-compta.ckcom.fr/api/documents/${inputFile.id}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -94,62 +90,61 @@ export default function DepotDetailsView({ id }) {
 
     return deletePromise; // Ensure function execution waits for promise resolution
   };
-  
 
   return (
     <DashboardContent>
-        <CustomBreadcrumbs
-          heading="Dépot"
-          links={[
-            {
-              name: 'Accueil',
-              href: paths.dashboard.root,
-              icon: <Iconify icon="solar:home-angle-2-bold-duotone" />,
-            },
-            {
-              name: 'Déclaration d’impôt',
-              href: paths.dashboard.declarationImpot,
-            },
-            {
-              name: 'Déposer',
-            },
-          ]}
-          sx={{ mb: { xs: 3, md: 5 } }}
-        />
-        <Box
-          display="grid"
-          gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }}
-          gap={3}
-        >
-          {files.length > 0 &&
-            files.map((file) => (
-              <DepotDetailsRow file={file} onRemove={()=>handleRemoveFile(file)}/>
-            ))}
-          <Card sx={{ height: 250 }}>
-            <UploadBox
-              sx={{ width: '100%', height: '100%' }}
-              placeholder={
-                <Box
-                  sx={{
-                    gap: 0.5,
-                    display: 'flex',
-                    alignItems: 'center',
-                    color: 'text.disabled',
-                    flexDirection: 'column',
-                  }}
-                >
-                  <Iconify icon="eva:cloud-upload-fill" width={40} />
-                  <Typography variant="body2">Télécharger le fichier</Typography>
-                </Box>
-              }
-              multiple
-              value={files}
-              onDrop={handleDropMultiFile}
-              onRemove={handleRemoveFile}
-              onUpload={() => console.info('ON UPLOAD')}
-            />
-          </Card>
-        </Box>
-      </DashboardContent>
+      <CustomBreadcrumbs
+        heading="Dépot"
+        links={[
+          {
+            name: 'Accueil',
+            href: paths.dashboard.root,
+            icon: <Iconify icon="solar:home-angle-2-bold-duotone" />,
+          },
+          {
+            name: 'Déclaration d’impôt',
+            href: paths.dashboard.declarationImpot,
+          },
+          {
+            name: 'Déposer',
+          },
+        ]}
+        sx={{ mb: { xs: 3, md: 5 } }}
+      />
+      <Box
+        display="grid"
+        gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }}
+        gap={3}
+      >
+        {files.length > 0 &&
+          files.map((file) => (
+            <DepotDetailsRow file={file} onRemove={() => handleRemoveFile(file)} />
+          ))}
+        <Card sx={{ height: 250 }}>
+          <UploadBox
+            sx={{ width: '100%', height: '100%' }}
+            placeholder={
+              <Box
+                sx={{
+                  gap: 0.5,
+                  display: 'flex',
+                  alignItems: 'center',
+                  color: 'text.disabled',
+                  flexDirection: 'column',
+                }}
+              >
+                <Iconify icon="eva:cloud-upload-fill" width={40} />
+                <Typography variant="body2">Télécharger le fichier</Typography>
+              </Box>
+            }
+            multiple
+            value={files}
+            onDrop={handleDropMultiFile}
+            onRemove={handleRemoveFile}
+            onUpload={() => console.info('ON UPLOAD')}
+          />
+        </Card>
+      </Box>
+    </DashboardContent>
   );
 }

@@ -104,7 +104,7 @@ export function FileManagerView({ files, setServiceStatus, serviceId }) {
     if (matricule) {
       try {
         const response = await axios.post(
-          `http://127.0.0.1:8000/api/form/${serviceId}`,
+          `https://as-compta.ckcom.fr/api/form/${serviceId}`,
           {},
           {
             headers: {

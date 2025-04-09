@@ -33,7 +33,7 @@ export function FileManagerView({ folders, setServiceStatus, status }) {
   const { user } = useMockedUser();
   const { updateRecords } = usePutRecords();
 
-  const canEdit = status === 'pending' || status === 'none' || status === 'rejected'
+  const canEdit = status === 'pending' || status === 'none' || status === 'rejected';
 
   const [demenagement, setDemenagement] = useState(user.demenagement);
   const [adresse, setAdresse] = useState(user.adresse);
@@ -59,12 +59,16 @@ export function FileManagerView({ folders, setServiceStatus, status }) {
 
     if (demenagement && adresse && situation) {
       try {
-        const response = await axios.post(`http://127.0.0.1:8000/api/form/4`, {}, {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem(STORAGE_KEY)}`,
-            'Content-Type': 'application/json',
-          },
-        });
+        const response = await axios.post(
+          `https://as-compta.ckcom.fr/api/form/4`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem(STORAGE_KEY)}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
 
         // Handle the response status
         switch (response.data.status) {
@@ -114,11 +118,21 @@ export function FileManagerView({ folders, setServiceStatus, status }) {
         </Grid>
         <Grid xs={12} md={4}>
           <InputLabel mb={1}>Résidence actuelle</InputLabel>
-          <TextField fullWidth value={adresse} onChange={(e) => setAdresse(e.target.value)} disabled={!canEdit}/>
+          <TextField
+            fullWidth
+            value={adresse}
+            onChange={(e) => setAdresse(e.target.value)}
+            disabled={!canEdit}
+          />
         </Grid>
         <Grid xs={12} md={4}>
           <InputLabel mb={1}>Situation familiale</InputLabel>
-          <Select fullWidth value={situation} onChange={(e) => setSituation(e.target.value)} disabled={!canEdit}>
+          <Select
+            fullWidth
+            value={situation}
+            onChange={(e) => setSituation(e.target.value)}
+            disabled={!canEdit}
+          >
             <MenuItem value="Célébataire">Célébataire</MenuItem>
           </Select>
         </Grid>
@@ -151,4 +165,3 @@ export function FileManagerView({ folders, setServiceStatus, status }) {
     </>
   );
 }
-

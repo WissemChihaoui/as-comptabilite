@@ -27,7 +27,7 @@ export default function DepotView({ data, loading }) {
   useEffect(() => {
     const fetchServiceStatus = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/api/status/4`, {
+        const response = await axios.get(`https://as-compta.ckcom.fr/api/status/4`, {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem(STORAGE_KEY)}`,
             'Content-Type': 'application/json',
@@ -51,23 +51,31 @@ export default function DepotView({ data, loading }) {
 
   return (
     <DashboardContent>
-        <CustomBreadcrumbs
-          heading="Déclaration d'impôt"
-          links={[
-            {
-              name: 'Accueil',
-              href: paths.dashboard.root,
-              icon: <Iconify icon="solar:home-angle-2-bold-duotone" />,
-            },
-            {
-              name: 'Déclaration d’impôt',
-              href: '#',
-            },
-          ]}
-          action={<Label color={serviceStatus.color}>{serviceStatus.label}</Label>} // ✅ Dynamic status
-          sx={{ mb: { xs: 3, md: 5 } }}
+      <CustomBreadcrumbs
+        heading="Déclaration d'impôt"
+        links={[
+          {
+            name: 'Accueil',
+            href: paths.dashboard.root,
+            icon: <Iconify icon="solar:home-angle-2-bold-duotone" />,
+          },
+          {
+            name: 'Déclaration d’impôt',
+            href: '#',
+          },
+        ]}
+        action={<Label color={serviceStatus.color}>{serviceStatus.label}</Label>} // ✅ Dynamic status
+        sx={{ mb: { xs: 3, md: 5 } }}
+      />
+      {loading ? (
+        renderLoading
+      ) : (
+        <FileManagerView
+          folders={data}
+          setServiceStatus={setServiceStatus}
+          status={serviceStatus.value}
         />
-        {loading ? renderLoading : <FileManagerView folders={data} setServiceStatus={setServiceStatus} status={serviceStatus.value}/>}
-      </DashboardContent>
+      )}
+    </DashboardContent>
   );
 }

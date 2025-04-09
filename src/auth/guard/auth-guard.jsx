@@ -16,6 +16,8 @@ export function AuthGuard({ children }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  console.log(pathname)
+
   const { authenticated, loading, user } = useAuthContext();
 
   console.log("from auth-guard :", user)
@@ -56,8 +58,8 @@ export function AuthGuard({ children }) {
     // 🔐 Check role
     if (user && user?.role) {
       // Redirect unauthorized users (e.g., user trying to access /admin)
-      if(user?.role=== "admin") router.replace(paths.admin.root);
-      if(user?.role=== "user") router.replace(paths.dashboard.root);
+      if(user?.role=== "admin" && !pathname.includes('admin')) router.replace(paths.admin.root);
+      if(user?.role=== "user" && !pathname.includes('dashboard')) router.replace(paths.dashboard.root);
     }
   };
 
