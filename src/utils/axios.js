@@ -76,5 +76,8 @@ export const endpoints = {
   },
   users: {
     all: '/api/users'
+  },
+  statistics: {
+    get: '/api/statistics'
   }
 };

@@ -10,7 +10,7 @@ import { ThemeProvider } from 'src/theme/theme-provider';
 
 import { ProgressBar } from 'src/components/progress-bar';
 import { MotionLazy } from 'src/components/animate/motion-lazy';
-import { SettingsDrawer, defaultSettings, SettingsProvider } from 'src/components/settings';
+import { defaultSettings, SettingsProvider } from 'src/components/settings';
 
 import { AuthProvider } from 'src/auth/context/jwt';
 
@@ -30,7 +30,6 @@ export default function App() {
             <MotionLazy>
               <Snackbar />
               <ProgressBar />
-              <SettingsDrawer />
               <Router />
             </MotionLazy>
           </ThemeProvider>

@@ -132,7 +132,7 @@ export function AdminLayout({ sx, children, header, data }) {
                 {/* -- Notifications popover -- */}
                 <NotificationsDrawer />
                 {/* -- Settings button -- */}
-                <SettingsButton />
+                {/* <SettingsButton /> */}
                 {/* -- Account drawer -- */}
                 <AccountDrawer data={_account} />
               </Box>

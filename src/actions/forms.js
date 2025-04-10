@@ -100,3 +100,24 @@ export function useGetForm(id) {
 
   return memoizedValue;
 }
+
+export function useGetStatistics() {
+  const url = endpoints.statistics.get;
+
+  const { data, isLoading } = useSWR(url, fetcher, swrOptions);
+
+  const memoizedValue = useMemo(
+    () => ({
+      totalUsers: data?.totalUsers,
+      totalForms: data?.totalForms,
+      totalDocuments: data?.totalDocuments,
+      usersMonthly: data?.usersMonthly,
+      formsMonthly: data?.formsMonthly,
+      documentsMonthly: data?.documentsMonthly,
+      loading: isLoading,
+    }),
+    [data, isLoading]
+  );
+
+  return memoizedValue;
+}
