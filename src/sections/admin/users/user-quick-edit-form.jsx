@@ -93,13 +93,13 @@ export function UserQuickEditForm({ currentUser, open, onClose }) {
             display="grid"
             gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
           >
-            <Field.Text name="name" label="Nom Complét" />
+            <Field.Text name="name" label="Nom Complet" />
             <Field.Text name="email" label="Email" />
 
             <Field.DatePicker name="demenagement" label="Démenagement" />
             <Field.Text name="matricule" label="Matricule" />
             <Field.Text name="adresse" label="Adresse" />
-            <Field.Select name="situation" label="Situation">
+            <Field.Select name="situation" label="Situation Familiale">
               {USER_SITUATIONS_OPTIONS.map((situation) => (
                 <MenuItem key={situation.label} value={situation.label}>
                   {situation.label}
