@@ -13,6 +13,7 @@ export const USER_SITUATIONS_OPTIONS = [
   { value: 'Marié(e)', label: 'Marié(e)' },
   { value: 'Divorcé(e)', label: 'Divorcé(e)' },
   { value: 'Veuf(ve)', label: 'Veuf(ve)' },
+  { value: 'Pacsé(e)', label: 'Pacsé(e)' },
   { value: 'Séparé(e)', label: 'Séparé(e)' },
 ];
 
