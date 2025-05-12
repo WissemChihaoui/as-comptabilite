@@ -50,10 +50,10 @@ export function JwtSignUpView() {
   const [errorMsg, setErrorMsg] = useState('');
 
   const defaultValues = {
-    name: 'Hello',
+    name: '',
     // lastName: 'Friend',
-    email: 'hello@gmail.com',
-    password: '@demo1',
+    email: '',
+    password: '',
   };
 
   const methods = useForm({
@@ -86,15 +86,15 @@ export function JwtSignUpView() {
   const renderForm = (
     <Box gap={3} display="flex" flexDirection="column">
       <Box display="flex" gap={{ xs: 3, sm: 2 }} flexDirection={{ xs: 'column', sm: 'row' }}>
-        <Field.Text name="name" label="Nom" InputLabelProps={{ shrink: true }} />
+        <Field.Text name="name" label="Nom" placeholder="Jon Doe" InputLabelProps={{ shrink: true }} />
       </Box>
 
-      <Field.Text name="email" label="Email" InputLabelProps={{ shrink: true }} />
+      <Field.Text placeholder="ascompta@email.com" name="email" label="Email" InputLabelProps={{ shrink: true }} />
 
       <Field.Text
         name="password"
         label="Mot de passe"
-        placeholder="6+ characters"
+        placeholder="6+ caractéres"
         type={password.value ? 'text' : 'password'}
         InputLabelProps={{ shrink: true }}
         InputProps={{

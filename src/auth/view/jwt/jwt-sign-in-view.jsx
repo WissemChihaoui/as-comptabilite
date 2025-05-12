@@ -48,8 +48,8 @@ export function JwtSignInView() {
   const password = useBoolean();
 
   const defaultValues = {
-    email: 'demo@minimals.cc',
-    password: '@demo1',
+    email: '',
+    password: '',
   };
 
   const methods = useForm({
@@ -76,7 +76,7 @@ export function JwtSignInView() {
 
   const renderForm = (
     <Box gap={3} display="flex" flexDirection="column">
-      <Field.Text name="email" label="Adresse e-mail" InputLabelProps={{ shrink: true }} />
+      <Field.Text placeholder="ascompta@email.com" name="email" label="Adresse e-mail" InputLabelProps={{ shrink: true }} />
 
       <Box gap={1.5} display="flex" flexDirection="column">
         <Link
@@ -92,7 +92,7 @@ export function JwtSignInView() {
         <Field.Text
           name="password"
           label="Mot de passe"
-          placeholder="6+ characters"
+          placeholder="6+ caractéres"
           type={password.value ? 'text' : 'password'}
           InputLabelProps={{ shrink: true }}
           InputProps={{
@@ -127,7 +127,7 @@ export function JwtSignInView() {
         title="Connectez-vous à votre compte"
         description={
           <>
-            {`Vous n'avez pas de compte ?`}
+            {`Vous n'avez pas de compte ? `}
             <Link component={RouterLink} href={paths.auth.jwt.signUp} variant="subtitle2">
             Commencer
             </Link>
