@@ -1,7 +1,9 @@
+import { toast } from 'sonner';
+
 import axios, { endpoints } from 'src/utils/axios';
 
 import { setSession } from './utils';
-import { STORAGE_KEY } from './constant';
+// import { STORAGE_KEY } from './constant';
 
 /** **************************************
  * Sign in
@@ -29,24 +31,11 @@ export const signInWithPassword = async ({ email, password }) => {
  * Sign up
  *************************************** */
 export const signUp = async ({ email, password, name }) => {
-  const params = {
-    email,
-    password,
-    name,
-  };
-
   try {
-    const res = await axios.post(endpoints.auth.signUp, params);
-
-    const { accessToken } = res.data;
-
-    if (!accessToken) {
-      throw new Error('Access token not found in response');
-    }
-
-    sessionStorage.setItem(STORAGE_KEY, accessToken);
+    await axios.post(endpoints.auth.signUp, { email, password, name });
+    toast.success('Vérifiez votre e-mail pour confirmer votre inscription.');
   } catch (error) {
-    console.error('Error during sign up:', error);
+    console.error('Erreur d\'inscription :', error);
     throw error;
   }
 };

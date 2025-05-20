@@ -1,6 +1,7 @@
 import { z as zod } from 'zod';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import Box from '@mui/material/Box';
@@ -21,7 +22,7 @@ import { Form, Field } from 'src/components/hook-form';
 
 import { useAuthContext } from '../../hooks';
 import { FormHead } from '../../components/form-head';
-import { signInWithPassword } from '../../context/jwt';
+import { signInWithPassword } from '../../context/jwt'; // ✅ added
 
 // ----------------------------------------------------------------------
 
@@ -40,12 +41,30 @@ export const SignInSchema = zod.object({
 
 export function JwtSignInView() {
   const router = useRouter();
-
   const { checkUserSession } = useAuthContext();
 
   const [errorMsg, setErrorMsg] = useState('');
+  const [successMsg, setSuccessMsg] = useState(''); // ✅ added
 
+  const [params] = useSearchParams(); // ✅ added
   const password = useBoolean();
+
+  useEffect(() => {
+    const success = params.get('success');
+    const error = params.get('error');
+
+    if (success === 'email-verified') {
+      setSuccessMsg('Votre adresse e-mail a été vérifiée avec succès. Vous pouvez maintenant vous connecter.');
+    }
+
+    if (error === 'invalid-or-expired-link') {
+      setErrorMsg('Le lien de vérification est invalide ou a expiré.');
+    }
+
+    if (error === 'already-verified') {
+      setErrorMsg('Cette adresse e-mail a déjà été vérifiée. Veuillez vous connecter.');
+    }
+  }, [params]);
 
   const defaultValues = {
     email: '',
@@ -129,18 +148,18 @@ export function JwtSignInView() {
           <>
             {`Vous n'avez pas de compte ? `}
             <Link component={RouterLink} href={paths.auth.jwt.signUp} variant="subtitle2">
-            Commencer
+              Commencer
             </Link>
           </>
         }
         sx={{ textAlign: { xs: 'center', md: 'left' } }}
       />
 
-        {/* <Alert severity="info" sx={{ mb: 3 }}>
-        Utiliser <strong>{defaultValues.email}</strong>
-          {' avec mot de passe '}
-          <strong>{defaultValues.password}</strong>
-        </Alert> */}
+      {!!successMsg && (
+        <Alert severity="success" sx={{ mb: 3 }}>
+          {successMsg}
+        </Alert>
+      )}
 
       {!!errorMsg && (
         <Alert severity="error" sx={{ mb: 3 }}>

@@ -60,7 +60,7 @@ export function FileManagerView({ folders, setServiceStatus, status }) {
     if (demenagement && adresse && situation) {
       try {
         const response = await axios.post(
-          `https://as-compta.ckcom.fr/api/form/4`,
+          `http://127.0.0.1:8000/api/form/4`,
           {},
           {
             headers: {

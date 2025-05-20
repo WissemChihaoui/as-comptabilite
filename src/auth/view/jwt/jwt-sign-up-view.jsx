@@ -74,9 +74,9 @@ export function JwtSignUpView() {
         name: data.name,
         // lastName: data.lastName,
       });
-      await checkUserSession?.();
+      // await checkUserSession?.();
 
-      router.refresh();
+      router.push(paths.auth.jwt.signIn);
     } catch (error) {
       console.error(error);
       setErrorMsg(typeof error === 'string' ? error : error.message);

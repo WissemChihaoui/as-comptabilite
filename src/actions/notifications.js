@@ -34,7 +34,7 @@ export function useGetNotifications() {
 export async function handleAllRead() {
   try {
     const response = await axios.patch(
-      'https://as-compta.ckcom.fr/api/notifications/read',
+      'http://127.0.0.1:8000/api/notifications/read',
       {},
       {
         headers: {
@@ -52,7 +52,7 @@ export async function handleAllRead() {
 export async function handleRead(id) {
   try {
     const response = await axios.patch(
-      `https://as-compta.ckcom.fr/api/notifications/read/${id}`,
+      `http://127.0.0.1:8000/api/notifications/read/${id}`,
       {},
       {
         headers: {

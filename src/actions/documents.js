@@ -32,7 +32,7 @@ export function useGetDocuments(i) {
 
 export async function dropFiles(files, serviceId, documentId) {
   const formData = new FormData();
-  const url = 'https://as-compta.ckcom.fr/api/documents/upload';
+  const url = 'http://127.0.0.1:8000/api/documents/upload';
 
   formData.append('service_id', serviceId);
   formData.append('document_id', documentId);
@@ -63,7 +63,7 @@ export async function dropFiles(files, serviceId, documentId) {
 export const fetchDocuments = async (serviceId, id) => {
   try {
     const response = await axios.get(
-      `https://as-compta.ckcom.fr/api/user/documents/${serviceId}/${id}`,
+      `http://127.0.0.1:8000/api/user/documents/${serviceId}/${id}`,
       {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem(STORAGE_KEY)}`,
@@ -79,13 +79,10 @@ export const fetchDocuments = async (serviceId, id) => {
 
 export async function downloadDocumentFile(documentId) {
   try {
-    const response = await axios.get(
-      `https://as-compta.ckcom.fr/api/documents/download/${documentId}`,
-      {
-        responseType: 'blob', // Important for binary files
-        headers: { Authorization: `Bearer ${sessionStorage.getItem(STORAGE_KEY)}` },
-      }
-    );
+    const response = await axios.get(`http://127.0.0.1:8000/api/documents/download/${documentId}`, {
+      responseType: 'blob', // Important for binary files
+      headers: { Authorization: `Bearer ${sessionStorage.getItem(STORAGE_KEY)}` },
+    });
 
     // Create a Blob from the response data
     const blob = new Blob([response.data], { type: response.headers['content-type'] });

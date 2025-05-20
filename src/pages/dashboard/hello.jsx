@@ -6,7 +6,7 @@ const App = () => {
 
   useEffect(() => {
     axios
-      .get('https://as-compta.ckcom.fr/api/hello')
+      .get('http://127.0.0.1:8000/api/hello')
       .then((response) => {
         setMessage(response.data.message);
       })

@@ -86,7 +86,7 @@ export function DemandesViewPage({ form }) {
   const handleDeleteItem = (id) => {
     const token = sessionStorage.getItem(STORAGE_KEY);
 
-    const deletePromise = fetch(`https://as-compta.ckcom.fr/api/documents/${id}`, {
+    const deletePromise = fetch(`http://127.0.0.1:8000/api/documents/${id}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -174,7 +174,7 @@ export function DemandesViewPage({ form }) {
               </Typography>
             )}
             {form.user.adresse && (
-              <Typography variant="caption">Addresse: {form.user.adresse}</Typography>
+              <Typography variant="caption">Adresse: {form.user.adresse}</Typography>
             )}
             {form.user.situation && (
               <Typography variant="caption">Situation: {form.user.situation}</Typography>

@@ -26,7 +26,7 @@ export default function SarlPageView({ data, loading }) {
   useEffect(() => {
     const fetchServiceStatus = async () => {
       try {
-        const response = await axios.get(`https://as-compta.ckcom.fr/api/status/2`, {
+        const response = await axios.get(`http://127.0.0.1:8000/api/status/2`, {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem(STORAGE_KEY)}`,
             'Content-Type': 'application/json',

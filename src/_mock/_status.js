@@ -1,7 +1,7 @@
 export const statusData =[
     { value: 'none', label: 'Pas demandé', color: 'default' },
-    { value: 'pending', label: 'En cours', color: 'info' },
-    { value: 'review', label: 'En attente', color: 'warning' },
-    { value: 'accepted', label: 'Accepté', color: 'success' },
-    { value: 'rejected', label: 'Refusé', color: 'error' },
+    { value: 'pending', label: 'En attente de validation', color: 'info' },
+    { value: 'review', label: 'Traitement en cours ', color: 'warning' },
+    { value: 'accepted', label: 'Demande approuvée ', color: 'success' },
+    { value: 'rejected', label: 'Demande refusée ', color: 'error' },
 ];

@@ -41,12 +41,10 @@ import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
 // ----------------------------------------------------------------------
 
-export function DemandesTableRow({
-  row,
-  onViewRow,
-  onDeleteRow,
-}) {
+export function DemandesTableRow({ row, onViewRow, onDeleteRow }) {
   const confirm = useBoolean();
+
+  const [note, setNote] = useState('');
 
   const { updateForm } = useUpdateForm();
 
@@ -58,21 +56,23 @@ export function DemandesTableRow({
 
   const handleEditRow = useCallback(
     async (id) => {
-      toast.promise(
-        async () => {
-          const result = await updateForm(id, statusValue);
-          if (!result.success) throw new Error(result.message);
+      try {
+        const result = await updateForm(id, statusValue);
 
-          edit.onFalse();
-        },
-        {
-          loading: 'Mise à jour en cours...',
-          success: 'Formulaire mis à jour avec succès',
-          error: 'Erreur lors de la mise à jour du formulaire',
+        if (!result.success) throw new Error(result.message);
+
+        edit.onFalse();
+
+        if (!note.trim()) {
+          toast.warning('Statut modifié sans note.');
+        } else {
+          toast.success('Statut modifié avec note.');
         }
-      );
+      } catch (err) {
+        toast.error('Erreur lors de la mise à jour du formulaire');
+      }
     },
-    [updateForm, statusValue, edit]
+    [updateForm, statusValue, note, edit]
   );
 
   return (
@@ -199,7 +199,10 @@ export function DemandesTableRow({
         fullWidth
         maxWidth={false}
         open={edit.value}
-        onClose={edit.onFalse}
+        onClose={() => {
+          edit.onFalse();
+          setNote('');
+        }}
         PaperProps={{ sx: { maxWidth: 720 } }}
       >
         <DialogTitle>Modifier status</DialogTitle>
@@ -211,7 +214,7 @@ export function DemandesTableRow({
             rowGap={3}
             columnGap={2}
             display="grid"
-            gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+            gridTemplateColumns={{ xs: 'repeat(1, 1fr)' }}
           >
             <FormControl sx={{ flexShrink: 0, width: { xs: 1, md: 200 } }}>
               <InputLabel htmlFor="user-filter-role-select-label">Statut</InputLabel>
@@ -231,6 +234,20 @@ export function DemandesTableRow({
                     </MenuItem>
                   ))}
               </Select>
+            </FormControl>
+            <FormControl fullWidth sx={{ mt: 3 }}>
+              <InputLabel htmlFor="note-field">
+                Note (facultative)
+              </InputLabel>
+              <OutlinedInput
+                id="note-field"
+                multiline
+                minRows={3}
+                value={note}
+                label="Note (facultative)"
+                onChange={(e) => setNote(e.target.value)}
+                placeholder="Ajoutez une note si nécessaire..."
+              />
             </FormControl>
           </Box>
         </DialogContent>

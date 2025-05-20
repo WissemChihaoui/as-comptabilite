@@ -91,6 +91,10 @@ export function FileManagerView({ files, setServiceStatus, serviceId }) {
 
   const SubmitData = async (e) => {
     e.preventDefault();
+    if (!/^\d{13}$/.test(matricule)) {
+  toast.error('Le matricule doit contenir exactement 13 chiffres.');
+  return;
+}
     toast.promise(updateMatricule({ matricule }), {
       loading: 'Mise à jour en cours...',
       success: 'Profil mis à jour avec succès!',
@@ -104,7 +108,7 @@ export function FileManagerView({ files, setServiceStatus, serviceId }) {
     if (matricule) {
       try {
         const response = await axios.post(
-          `https://as-compta.ckcom.fr/api/form/${serviceId}`,
+          `http://127.0.0.1:8000/api/form/${serviceId}`,
           {},
           {
             headers: {
@@ -149,7 +153,20 @@ export function FileManagerView({ files, setServiceStatus, serviceId }) {
       <Grid container spacing={2}>
         <Grid xs={12} md={4}>
           <InputLabel mb={1}>Numéro de matricule luxembourgeois</InputLabel>
-          <TextField fullWidth value={matricule} onChange={(e) => setMatricule(e.target.value)} />
+          <TextField
+  fullWidth
+  value={matricule}
+  error={!!matricule && (!/^\d{13}$/.test(matricule))}
+  helperText={
+    !!matricule && (!/^\d{13}$/.test(matricule))
+      ? 'Le numéro doit contenir exactement 13 chiffres'
+      : ''
+  }
+  onChange={(e) => {
+    const onlyNums = e.target.value.replace(/\D/g, '');
+    setMatricule(onlyNums.slice(0, 13));
+  }}
+/>
         </Grid>
       </Grid>
       <Stack py={2} alignItems="flex-end">

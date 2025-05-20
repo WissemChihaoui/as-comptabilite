@@ -58,7 +58,7 @@ export default function DepotDetailsView({ id }) {
     const token = sessionStorage.getItem(STORAGE_KEY); // Retrieve auth token
 
     // Create a Promise without an async executor
-    const deletePromise = fetch(`https://as-compta.ckcom.fr/api/documents/${inputFile.id}`, {
+    const deletePromise = fetch(`http://127.0.0.1:8000/api/documents/${inputFile.id}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,
