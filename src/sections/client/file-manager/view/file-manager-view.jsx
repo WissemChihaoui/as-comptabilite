@@ -35,9 +35,8 @@ export function FileManagerView({ folders, setServiceStatus, status }) {
 
   const canEdit = status === 'pending' || status === 'none' || status === 'rejected';
 
-  const [demenagement, setDemenagement] = useState(user.demenagement);
+  const [matricule, setMatricule] = useState(user.matricule);
   const [adresse, setAdresse] = useState(user.adresse);
-  const [situation, setSituation] = useState(user.situation);
 
   const table = useTable({ defaultRowsPerPage: 10 });
 
@@ -47,7 +46,11 @@ export function FileManagerView({ folders, setServiceStatus, status }) {
 
   const SubmitData = async (e) => {
     e.preventDefault();
-    toast.promise(updateRecords({ demenagement, adresse, situation }), {
+    if (!/^\d{13}$/.test(matricule)) {
+      toast.error('Le matricule doit contenir exactement 13 chiffres.');
+      return;
+    }
+    toast.promise(updateRecords({ adresse, matricule }), {
       loading: 'Mise à jour en cours...',
       success: 'Profil mis à jour avec succès!',
       error: 'Échec de la mise à jour du profil!',
@@ -57,7 +60,7 @@ export function FileManagerView({ folders, setServiceStatus, status }) {
   const SubmitFiles = async (e) => {
     e.preventDefault();
 
-    if (demenagement && adresse && situation) {
+    if (matricule && adresse) {
       try {
         const response = await axios.post(
           `http://127.0.0.1:8000/api/form/4`,
@@ -106,14 +109,20 @@ export function FileManagerView({ folders, setServiceStatus, status }) {
       </Typography>
       <Grid container spacing={2}>
         <Grid xs={12} md={4}>
-          <InputLabel mb={1}>Date de déménagement</InputLabel>
-          <DatePicker
-            sx={{ width: '100%' }}
-            value={demenagement}
-            onChange={(newValue) => {
-              setDemenagement(newValue);
+          <InputLabel mb={1}>Numéro de matricule luxembourgeois</InputLabel>
+          <TextField
+            fullWidth
+            value={matricule}
+            error={!!matricule && !/^\d{13}$/.test(matricule)}
+            helperText={
+              !!matricule && !/^\d{13}$/.test(matricule)
+                ? 'Le numéro doit contenir exactement 13 chiffres'
+                : ''
+            }
+            onChange={(e) => {
+              const onlyNums = e.target.value.replace(/\D/g, '');
+              setMatricule(onlyNums.slice(0, 13));
             }}
-            disabled={!canEdit}
           />
         </Grid>
         <Grid xs={12} md={4}>
@@ -124,17 +133,6 @@ export function FileManagerView({ folders, setServiceStatus, status }) {
             onChange={(e) => setAdresse(e.target.value)}
             disabled={!canEdit}
           />
-        </Grid>
-        <Grid xs={12} md={4}>
-          <InputLabel mb={1}>Situation familiale</InputLabel>
-          <Select
-            fullWidth
-            value={situation}
-            onChange={(e) => setSituation(e.target.value)}
-            disabled={!canEdit}
-          >
-            <MenuItem value="Célébataire">Célébataire</MenuItem>
-          </Select>
         </Grid>
       </Grid>
       <Stack py={2} alignItems="flex-end">

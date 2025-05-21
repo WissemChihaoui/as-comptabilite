@@ -1,6 +1,6 @@
-import useSWR from 'swr';
 import axios from 'axios';
 import { useMemo } from 'react';
+import useSWR, { mutate } from 'swr';
 
 import { fetcher, endpoints } from 'src/utils/axios';
 
@@ -48,6 +48,8 @@ export async function dropFiles(files, serviceId, documentId) {
         'Content-Type': 'multipart/form-data',
       },
     });
+    mutate(endpoints.forms.myForms);
+
     return response.data;
   } catch (error) {
     if (error.response) {

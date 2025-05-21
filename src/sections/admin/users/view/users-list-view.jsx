@@ -39,9 +39,7 @@ import { UserTableRow } from '../user-table-row';
 const TABLE_HEAD = [
   { id: 'name', label: 'Nom' },
   { id: 'matricule', label: 'Matricule', width: 180 },
-  { id: 'demenagement', label: 'Démenagement', width: 220 },
   { id: 'adresse', label: 'Adresse', width: 180 },
-  { id: 'situation', label: 'Situation', width: 100 },
   { id: '', width: 88 },
 ];
 

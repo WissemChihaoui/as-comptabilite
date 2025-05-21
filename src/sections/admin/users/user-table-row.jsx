@@ -44,10 +44,8 @@ export function UserTableRow({ row, onEditRow, onDeleteRow }) {
 
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.matricule}</TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{fDate(row.demenagement)}</TableCell>
 
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.adresse}</TableCell>
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.situation}</TableCell>
 
         <TableCell>
           <Stack direction="row" alignItems="center">

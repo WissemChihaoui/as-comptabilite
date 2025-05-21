@@ -57,7 +57,7 @@ export function DemandesTableRow({ row, onViewRow, onDeleteRow }) {
   const handleEditRow = useCallback(
     async (id) => {
       try {
-        const result = await updateForm(id, statusValue);
+        const result = await updateForm(id, statusValue, note);
 
         if (!result.success) throw new Error(result.message);
 
@@ -207,12 +207,11 @@ export function DemandesTableRow({ row, onViewRow, onDeleteRow }) {
       >
         <DialogTitle>Modifier status</DialogTitle>
         <DialogContent>
-          <Alert variant="outlined" severity="warning" sx={{ mb: 3 }}>
-            Demande en attente de confirmation
-          </Alert>
+          
           <Box
-            rowGap={3}
+            rowGap={1}
             columnGap={2}
+            pt={3}
             display="grid"
             gridTemplateColumns={{ xs: 'repeat(1, 1fr)' }}
           >

@@ -43,6 +43,7 @@ export function useDeleteForm() {
 
       // Invalidate and re-fetch forms list after deletion
       mutate(endpoints.forms.all);
+      mutate(endpoints.forms.myForms);
 
       return { success: true, message: 'Form deleted successfully' };
     } catch (error) {
@@ -54,13 +55,13 @@ export function useDeleteForm() {
 }
 
 export function useUpdateForm() {
-  const updateForm = async (id, status) => {
+  const updateForm = async (id, status, note) => {
     try {
       const url = `http://127.0.0.1:8000/api/forms/${id}`;
 
       const response = await axios.patch(
         url,
-        { status },
+        { status, note },
         {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem(STORAGE_KEY)}`,
@@ -70,6 +71,7 @@ export function useUpdateForm() {
 
       // Revalidate the form list after successful update
       mutate(endpoints.forms.all);
+      mutate(endpoints.forms.myForms);
 
       return { success: true, data: response.data };
     } catch (error) {
@@ -117,6 +119,24 @@ export function useGetStatistics() {
       loading: isLoading,
     }),
     [data, isLoading]
+  );
+
+  return memoizedValue;
+}
+
+export function useGetMyForms() {
+  const url = endpoints.forms.myForms;
+
+  const { data, isLoading, error, isValidating } = useSWR(url, fetcher, swrOptions);
+   const memoizedValue = useMemo(
+    () => ({
+      forms: data ?? [],
+      formsLoading: isLoading,
+      formsError: error,
+      formsValidating: isValidating,
+      formsEmpty: !isLoading && !data?.length,
+    }),
+    [data, error, isLoading, isValidating]
   );
 
   return memoizedValue;

@@ -72,7 +72,8 @@ export const endpoints = {
   forms: {
     all: '/api/forms',
     deleteForm: (id)=> `/api/forms/${id}`,
-    get: (id) => `/api/forms/${id}`
+    get: (id) => `/api/forms/${id}`,
+    myForms: '/api/myforms'
   },
   users: {
     all: '/api/users'

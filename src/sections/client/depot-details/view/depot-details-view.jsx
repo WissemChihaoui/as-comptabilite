@@ -18,11 +18,13 @@ import DepotDetailsRow from '../depot-details-row';
 
 export default function DepotDetailsView({ id }) {
   const [files, setFiles] = useState([]);
-
+  // const [service, setService] = useState({})
+  console.log(files)
   useEffect(() => {
     const loadDocuments = async () => {
       try {
         const documents = await fetchDocuments(4, id);
+        console.log(documents)
         setFiles(documents.filter((row) => row.document_id === Number(id)));
       } catch (error) {
         console.error('Error fetching documents:', error);
@@ -94,7 +96,7 @@ export default function DepotDetailsView({ id }) {
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Dépot"
+        heading={files[0]?.document?.name}
         links={[
           {
             name: 'Accueil',

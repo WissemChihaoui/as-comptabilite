@@ -89,10 +89,10 @@ export function useUpdateUser() {
 }
 
 export function usePutRecords() {
-  const updateRecords = async ({ demenagement, adresse, situation }) => {
+  const updateRecords = async ({ adresse, matricule }) => {
     try {
       const url = 'http://127.0.0.1:8000/api/user/profile';
-      const params = { demenagement, adresse, situation };
+      const params = { adresse, matricule };
 
       const res = await axios.put(url, params, {
         headers: {

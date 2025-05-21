@@ -8,6 +8,8 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 
 import { varAlpha } from 'src/theme/styles';
+import { statusData } from 'src/_mock/_status';
+import { useGetMyForms } from 'src/actions/forms';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
@@ -23,6 +25,8 @@ import { SignOutButton } from './sign-out-button';
 export function AccountDrawer({ sx, ...other }) {
   const theme = useTheme();
 
+  const { forms } = useGetMyForms()
+  console.log(forms)
   const { user } = useMockedUser();
 
   const [open, setOpen] = useState(false);
@@ -87,8 +91,66 @@ export function AccountDrawer({ sx, ...other }) {
               {user?.email}
             </Typography>
           </Stack>
-        </Scrollbar>
 
+         <Stack
+  spacing={2}
+  sx={{
+    py: 3,
+    px: 2.5,
+    borderTop: `dashed 1px ${theme.vars.palette.divider}`,
+    borderBottom: `dashed 1px ${theme.vars.palette.divider}`,
+  }}
+>
+  {forms && forms.length > 0 ? (
+    forms.map((form) => {
+      const status = statusData.find((s) => s.value === form.status) || {
+        label: form.status,
+        color: 'default',
+      };
+
+      return (
+        <Box
+          key={form.id}
+          sx={{
+            p: 2,
+            borderRadius: 1.5,
+            bgcolor: 'background.neutral',
+            boxShadow: 1,
+          }}
+        >
+          <Typography variant="subtitle2" color="text.primary">
+            {form.service?.name ?? 'Service inconnu'}
+          </Typography>
+
+          <Box display="flex" alignItems="center" gap={1} mt={0.5}>
+           
+            <Box
+              component="span"
+              sx={{
+                px: 1.5,
+                py: 0.5,
+                borderRadius: 1,
+                bgcolor: `${status.color}.main`,
+                color: 'common.white',
+                fontSize: 12,
+                fontWeight: 500,
+              }}
+            >
+              {status.label}
+            </Box>
+          </Box>
+        </Box>
+      );
+    })
+  ) : (
+    <Typography variant="body2" color="text.secondary">
+      Aucun formulaire trouvé.
+    </Typography>
+  )}
+</Stack>
+
+        </Scrollbar>
+    
         <Box sx={{ p: 2.5 }}>
           <SignOutButton onClose={handleCloseDrawer} />
         </Box>
